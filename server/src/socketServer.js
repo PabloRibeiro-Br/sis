@@ -29,35 +29,12 @@ const registerSocketServer = (server) => {
   });
 };
 
-const sessionHistoryHandler = (socket, data) => {
-  const { sessionId } = data;
-
-  if (sessions[sessionId]) {
-    
-    socket.emit("session-details", {
-      sessionId,
-      conversations: sessions[sessionId],
-    });
-  } else {
-    const newSessionId = uuid();
-
-    sessions[newSessionId] = [];
-
-    const sessionDetails = {
-      sessionId: newSessionId,
-      conversations: [],
-    };
-
-    socket.emit("session-details", sessionDetails);
-  }
-};
-
 const conversationMessageHandler = async (socket, data) => {
   const { sessionId, message, conversationId } = data;
 
   const openai = getOpenai();
 
-  const previousConversationMessages = [];
+  let previousConversation = [];
 
   if (sessions[sessionId]) {
     const existingConversation = sessions[sessionId].find(
@@ -65,59 +42,69 @@ const conversationMessageHandler = async (socket, data) => {
     );
 
     if (existingConversation) {
-      previousConversationMessages.push(
-        ...existingConversation.messages.map((m) => ({
-          content: m.content,
-          role: m.aiMessage ? "assistant" : "user",
-        }))
-      );
+      previousConversation = existingConversation.messages.map((m) => ({
+        content: m.content,
+        role: m.aiMessage ? "assistant" : "user",
+      }));
     }
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: "Reparação Automotiva, Explicar o código DTC EOBD2, Descrever os sintomas e procedimentos de reparação." + message.content,
-               temperature: 0.3,
-               max_tokens: 220,
-               top_p: 0.3,
-    });
-
-   const aiMessageContent = response?.data?.choices[0]?.text;
-
-    const aiMessage = {
-      content: aiMessageContent
-        ? aiMessageContent
-        : "Erro da Inteligência Artificial, sem comunicação: REDE-NEURAL-P8493",
-      id: uuid(),
-      aiMessage: true,
-    };
-
-    const conversation = sessions[sessionId].find(
-      (c) => c.id === conversationId
-    );
-
-    if (!conversation) {
-      sessions[sessionId].push({
-        id: conversationId,
-        messages: [message, aiMessage],
-      });
-    }
-
-    if (conversation) {
-      conversation.messages.push(message, aiMessage);
-    }
-
-    const updatedConversation = sessions[sessionId].find(
-      (c) => c.id === conversationId
-    );
-
-    socket.emit("conversation-details", updatedConversation);
   }
-};
 
-const conversationDeleteHandler = (_, data) => {
-  const { sessionId } = data;
+  const conversationHistory = [...previousConversation, message];
 
-  if (sessions[sessionId]) {
-    sessions[sessionId] = [];
+  const lastUserMessage = conversationHistory
+    .filter((msg) => msg.role === "user")
+    .pop();
+
+  if (lastUserMessage) {
+    try {
+      const response = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: `Assistente de Reparação de Automóveis a Gasolina, Especializado em Injeção Eletrônica. ${lastUserMessage.content}`,
+        temperature: 0.3,
+        max_tokens: 220,
+        top_p: 0.3,
+      });
+
+      const aiMessageContent = response?.data?.choices[0]?.text;
+
+      const aiMessage = {
+        content: aiMessageContent
+          ? aiMessageContent
+          : "Erro da Inteligência Artificial, sem comunicação: REDE-NEURAL-P8493",
+        id: uuid(),
+        aiMessage: true,
+      };
+
+      const conversation = sessions[sessionId].find(
+        (c) => c.id === conversationId
+      );
+
+      if (!conversation) {
+        sessions[sessionId].push({
+          id: conversationId,
+          messages: [...conversationHistory, aiMessage],
+        });
+      }
+
+      if (conversation) {
+        conversation.messages.push(aiMessage);
+      }
+
+      const updatedConversation = sessions[sessionId].find(
+        (c) => c.id === conversationId
+      );
+
+      socket.emit("conversation-details", updatedConversation);
+    } catch (error) {
+      console.error("Erro ao obter informações do DTC:", error);
+      const errorMessage = {
+        content: "Erro ao obter informações do DTC. Por favor, tente novamente mais tarde.",
+        id: uuid(),
+        aiMessage: true,
+      };
+
+      socket.emit("conversation-details", errorMessage);
+    }
   }
 };
 
