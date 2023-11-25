@@ -1,4 +1,69 @@
-const { Server } = require("socket.io");
+const conversationMessageHandler = async (socket, data) => {
+  const { sessionId, message, conversationId } = data;
+
+  const openai = getOpenai();
+
+  const conversation = sessions[sessionId]?.find(
+    (c) => c.id === conversationId
+  );
+
+  let prompt = "Você é uma professora que ensina macetes da prova do Enem. Seu nome é Núcleo Enem. " + message.content;
+
+  if (conversation && conversation.messages.length > 0) {
+    const previousMessage = conversation.messages[conversation.messages.length - 1];
+    prompt = `${previousMessage.content}\nMacedes e Dicas para estudar para a prova do Enem. Sempre leia sua resposta e a pergunta, antes de exibir a resposta. ${message.content}`;
+  }
+
+  const response = await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: prompt,
+    temperature: 0.4,
+    max_tokens: 250,
+    top_p: 0.5,
+    frequency_penalty: 2,
+    presence_penalty: 0,
+  });
+
+  const aiMessageContent = response?.data?.choices[0]?.text.trim();
+
+  const aiMessage = {
+    content: aiMessageContent
+      ? aiMessageContent
+      : "Erro da Inteligência Artificial, sem comunicação: REDE-NEURAL-P8493",
+    id: uuid(),
+    aiMessage: true,
+  };
+
+  if (!conversation) {
+    sessions[sessionId] = [{
+      id: conversationId,
+      messages: [message, aiMessage],
+    }];
+  } else {
+    conversation.messages.push(aiMessage);
+  }
+
+  const updatedConversation = sessions[sessionId].find(
+    (c) => c.id === conversationId
+  );
+
+  socket.emit("conversation-details", updatedConversation);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* const { Server } = require("socket.io");
 const { v4: uuid } = require("uuid");
 const { getOpenai } = require("./ai");
 
@@ -52,7 +117,7 @@ const sessionHistoryHandler = (socket, data) => {
   }
 };
 
-/* const conversationMessageHandler = async (socket, data) => {
+const conversationMessageHandler = async (socket, data) => {
   const { sessionId, message, conversationId } = data;
 
   const openai = getOpenai();
@@ -79,33 +144,9 @@ const sessionHistoryHandler = (socket, data) => {
                temperature: 0.1,
                max_tokens: 150,
                top_p: 0.5,
-    }); */
-    const conversationMessageHandler = async (socket, data) => {
-      const { sessionId, message, conversationId } = data;
+    });
     
-      const openai = getOpenai();
-    
-      let prompt;
-      if (message.content.includes('Lubrificante')) {
-        prompt = "Pesquise no fabricante o modelo do veículo, e exiba o Lubrificante do Motor recomendado e a Quantidade em Litros. " + 
-                 "[Montadora], [Veículo],[ Motor], [Ano]";
-      } else if (message.content.includes('Alternativa')) {
-        prompt = "Leia a resposta anterior, e exiba 3 alternativas de óleo para esse veículo. " + 
-                 "Alternativas de Lubrificante para esse veículo";
-      } else {
-        prompt = "Leia as mensagens anteriores + a nova pergunta, e responda de acordo com o lubrificante do veículo. " + message.content;
-      }
-    
-      const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: prompt,
-        max_tokens: 100,
-        temperature: 0.1,
-        top_p: 0.3,
-      });
-
-   
-
+  };
    const aiMessageContent = response?.data?.choices[0]?.text;
 
     const aiMessage = {
@@ -148,3 +189,4 @@ const conversationDeleteHandler = (_, data) => {
 };
 
 module.exports = { registerSocketServer };
+ */
