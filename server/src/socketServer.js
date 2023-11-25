@@ -52,7 +52,7 @@ const sessionHistoryHandler = (socket, data) => {
   }
 };
 
-const conversationMessageHandler = async (socket, data) => {
+/* const conversationMessageHandler = async (socket, data) => {
   const { sessionId, message, conversationId } = data;
 
   const openai = getOpenai();
@@ -73,21 +73,38 @@ const conversationMessageHandler = async (socket, data) => {
       );
     }
 
-
-/*     const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: "Você é um assistênte de códigos de programação em Aplicativos e sistemas de Web. " + message.content,
-      max_tokens: 3120,
-      temperature: 0.2,
-    }); */
-
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: "Exiba o Lubrificante do Motor recomendado pela fábricante, exiba a quantidade em litros.",
                temperature: 0.1,
                max_tokens: 150,
                top_p: 0.5,
-    });
+    }); */
+    const conversationMessageHandler = async (socket, data) => {
+      const { sessionId, message, conversationId } = data;
+    
+      const openai = getOpenai();
+    
+      let prompt;
+      if (message.content.includes('freios')) {
+        prompt = "Pesquise no fabricante o modelo do veículo, e exiba o Lubrificante do Motor recomendado e a Quantidade em Litros. " + 
+                 "[Montadora], [Veículo],[ Motor], [Ano]";
+      } else if (message.content.includes('motor')) {
+        prompt = "Leia a resposta anterior, e exiba 3 alternativas de óleo para esse veículo. " + 
+                 "Alternativas de Lubrificante para esse veículo";
+      } else {
+        prompt = "Leia as mensagens anteriores + a nova pergunta, e responda de acordo com o lubrificante do veículo. " + message.content;
+      }
+    
+      const response = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: prompt,
+        max_tokens: 400,
+        temperature: 0.2,
+        top_p: 0.5,
+      });
+
+   
 
    const aiMessageContent = response?.data?.choices[0]?.text;
 
@@ -119,7 +136,7 @@ const conversationMessageHandler = async (socket, data) => {
     );
 
     socket.emit("conversation-details", updatedConversation);
-  }
+ 
 };
 
 const conversationDeleteHandler = (_, data) => {
