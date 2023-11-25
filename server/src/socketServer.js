@@ -99,9 +99,9 @@ const sessionHistoryHandler = (socket, data) => {
       const response = await openai.createCompletion({
         model: "text-davinci-003",
         prompt: prompt,
-        max_tokens: 400,
-        temperature: 0.2,
-        top_p: 0.5,
+        max_tokens: 100,
+        temperature: 0.1,
+        top_p: 0.3,
       });
 
    
