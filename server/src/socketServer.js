@@ -73,6 +73,14 @@ const conversationMessageHandler = async (socket, data) => {
       );
     }
 
+
+/*     const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: "Você é um assistênte de códigos de programação em Aplicativos e sistemas de Web. " + message.content,
+      max_tokens: 3120,
+      temperature: 0.2,
+    }); */
+
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: "Exiba o Lubrificante do Motor recomendado pela fábricante, exiba a quantidade em litros.",
@@ -80,7 +88,26 @@ const conversationMessageHandler = async (socket, data) => {
                max_tokens: 150,
                top_p: 0.5,
     });
-   
+
+   const aiMessageContent = response?.data?.choices[0]?.text;
+
+    const aiMessage = {
+      content: aiMessageContent
+        ? aiMessageContent
+        : "Erro da Inteligência Artificial, sem comunicação: REDE-NEURAL-P8493",
+      id: uuid(),
+      aiMessage: true,
+    };
+
+    const conversation = sessions[sessionId].find(
+      (c) => c.id === conversationId
+    );
+
+    if (!conversation) {
+      sessions[sessionId].push({
+        id: conversationId,
+        messages: [message, aiMessage],
+      });
     }
 
     if (conversation) {
@@ -92,7 +119,7 @@ const conversationMessageHandler = async (socket, data) => {
     );
 
     socket.emit("conversation-details", updatedConversation);
- 
+  }
 };
 
 const conversationDeleteHandler = (_, data) => {
