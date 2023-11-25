@@ -83,10 +83,12 @@ const conversationMessageHandler = async (socket, data) => {
 
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: "Responder em Português do Brasil. Seja amistoso e fale sobre assuntos de reparação de automóveis.",
-               temperature: 0.6,
-               max_tokens: 250,
-               top_p: 0.5,
+      prompt: "Responder em Português do Brasil." + "Você é uma inteligência artificial, você é uma assistente para mecânicos de automóveis.",
+               temperature: 0.1,
+               max_tokens: 120,
+               top_p: 0.1,
+               frequency_penalty: 2,
+               presence_penalty: 0,
     });
 
    const aiMessageContent = response?.data?.choices[0]?.text;
