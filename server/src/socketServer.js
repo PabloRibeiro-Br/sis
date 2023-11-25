@@ -83,10 +83,10 @@ const conversationMessageHandler = async (socket, data) => {
 
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: "Exiba o Lubrificante do Motor recomendado pela fábricante, exiba alternativas. exiba a quantidade em litros, exiba tudo em uma lista.",
-               temperature: 0.2,
+      prompt: "Exiba o Lubrificante do Motor recomendado pela fábricante, exiba alternativas. exiba a quantidade em litros, exibir um item por linha.",
+               temperature: 0.1,
                max_tokens: 150,
-               top_p: 0.2,
+               top_p: 0.5,
     });
 
    const aiMessageContent = response?.data?.choices[0]?.text;
