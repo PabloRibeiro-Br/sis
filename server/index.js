@@ -14,11 +14,11 @@ socketServer.registerSocketServer(server);
 app.use(cors());
 
 app.get("/", (req, res) => {
-  res.send("Hello server is working");
+  res.send("O servidor está funcionando, o Pai ta ON");
 });
 
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
-  console.log(`App started listening at port ${PORT}`);
+  console.log(`CONEXAO REALIZADA COM SUCESSO BABY! ${PORT}`);
 });

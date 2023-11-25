@@ -72,15 +72,6 @@ const conversationMessageHandler = async (socket, data) => {
         }))
       );
     }
-
-
-/*     const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: "Você é um assistênte de códigos de programação em Aplicativos e sistemas de Web. " + message.content,
-      max_tokens: 3120,
-      temperature: 0.2,
-    }); */
-
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: "Responder em Português do Brasil." + "Você é uma assistente para mecânicos de automóveis." 
@@ -88,7 +79,6 @@ const conversationMessageHandler = async (socket, data) => {
                temperature: 0.1,
                max_tokens: 120,
                top_p: 0.1,
-
     });
 
    const aiMessageContent = response?.data?.choices[0]?.text;

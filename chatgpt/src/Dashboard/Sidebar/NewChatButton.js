@@ -11,7 +11,7 @@ const NewChatButton = ({ handleSetSelectedChat }) => {
       <div className="new_chat_button_icon">
         <AiOutlinePlus color="white" />
       </div>
-      <p className="new_chat_button_text">New Chat</p>
+      <p className="new_chat_button_text">Nova Pesquisa</p>
     </div>
   );
 };
