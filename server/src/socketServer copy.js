@@ -59,9 +59,9 @@ const conversationMessageHandler = async (socket, data) => {
     try {
       const response = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: `Reparação Automotiva, Explicar o código DTC EOBD2, Descrever os sintomas e procedimentos de reparação. ${lastUserMessage.content}`,
+        prompt: `Assistente de Reparação de Automóveis a Gasolina, Especializado em Injeção Eletrônica. ${lastUserMessage.content}`,
         temperature: 0.3,
-        max_tokens: 220,
+        max_tokens: 620,
         top_p: 0.3,
       });
 
