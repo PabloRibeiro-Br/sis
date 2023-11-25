@@ -19,7 +19,7 @@ const Messages = () => {
 
   useEffect(scrollToButton, [conversation?.messages]);
 
-  return (
+/*   return (
     <div className="chat_messages_container">
       {conversation?.messages.map((m, index) => (
         <Message
@@ -29,6 +29,23 @@ const Messages = () => {
           animate={index === conversation.messages.length - 1 && m.aiMessage}
         />
       ))}
+      <div ref={scrollRef} />
+    </div>
+  ); */
+
+  return (
+    <div className="chat_messages_container">
+      <ul>
+        {conversation?.messages.map((m, index) => (
+          <li key={m.id}>
+            <Message
+              content={m.content}
+              aiMessage={m.aiMessage}
+              animate={index === conversation.messages.length - 1 && m.aiMessage}
+            />
+          </li>
+        ))}
+      </ul>
       <div ref={scrollRef} />
     </div>
   );
