@@ -74,7 +74,7 @@ const conversationMessageHandler = async (socket, data) => {
     }
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: "Responder em Português do Brasil." + "Você é uma assistente para mecânicos de automóveis." 
+      prompt: "Responder em Português do Brasil, Responda sempre em segunda pessoa, tipo receita." + "Você é uma assistente para mecânicos de automóveis." 
               + "Procedimentos de Reparação." + "Diagnóstico pelo defeito."+ "Códigos de Falhas DTC."  + message.content,
                temperature: 0.1,
                max_tokens: 320,
