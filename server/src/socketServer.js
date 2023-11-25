@@ -86,10 +86,10 @@ const sessionHistoryHandler = (socket, data) => {
       const openai = getOpenai();
     
       let prompt;
-      if (message.content.includes('freios')) {
+      if (message.content.includes('Lubrificante')) {
         prompt = "Pesquise no fabricante o modelo do veículo, e exiba o Lubrificante do Motor recomendado e a Quantidade em Litros. " + 
                  "[Montadora], [Veículo],[ Motor], [Ano]";
-      } else if (message.content.includes('motor')) {
+      } else if (message.content.includes('Alternativa')) {
         prompt = "Leia a resposta anterior, e exiba 3 alternativas de óleo para esse veículo. " + 
                  "Alternativas de Lubrificante para esse veículo";
       } else {
