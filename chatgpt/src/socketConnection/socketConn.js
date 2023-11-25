@@ -8,7 +8,8 @@ import {
 let socket;
 
 export const connectWithSocketServer = () => {
-  socket = io("https://sis-clw8.onrender.com");
+  socket = io("http://localhost:5000");
+ /*  socket = io("https://sis-clw8.onrender.com"); */
 
   socket.on("connect", () => {
     console.log("connected with socket.io server");
