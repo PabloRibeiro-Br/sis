@@ -13,9 +13,25 @@ const dashboardSlice = createSlice({
         setSelectedConversationId: (state, action) => {
             state.selectedConversationId = action.payload;
         },
+        addMessage: (state, action) => { // Corrigido aqui: de addMessege para addMessage
+            const { message, conversationId } = action.payload;
+
+            const conversation = state.conversations.find(
+                (c) => c.id === conversationId
+            );
+
+            if (conversation) {
+                conversation.messages.push(message);
+            } else {
+                state.conversations.push({
+                    id: conversationId,
+                    messages: [message],
+                });
+            }
+        },
     },
 });
 
-export const { setSelectedConversationId } = dashboardSlice.actions;
+export const { setSelectedConversationId, addMessage } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

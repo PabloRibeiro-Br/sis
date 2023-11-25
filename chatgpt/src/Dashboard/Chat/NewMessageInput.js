@@ -1,9 +1,17 @@
 import React, {useState} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { BsSend } from 'react-icons/bs';
 import { v4 as uuid } from "uuid";
+import { addMessage } from '../dashboardSlice';
 
 const NewMessageInput = () => {
   const [content, setContent ] = useState("");
+
+  const dispatch = useDispatch();
+
+  const selectedConversationId = useSelector(
+    (state) => state.dashboard.selectedConversationId
+  );
 
   const proceedMessage = () => {
     const message = {
@@ -12,6 +20,16 @@ const NewMessageInput = () => {
       id: uuid(),
       animate: false, 
     };
+
+    console.log(message);
+
+    const conversationId = 
+    selectedConversationId === 'new' ? uuid() : selectedConversationId;
+
+    dispatch(addMessage({
+        conversationId,
+        message,
+      }));
 
     setContent("");
   };
