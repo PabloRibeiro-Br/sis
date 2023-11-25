@@ -30,39 +30,40 @@ const registerSocketServer = (server) => {
 };
 
 const conversationMessageHandler = async (socket, data) => {
-  const { sessionId, message, conversationId } = data;
+  try {
+    const { sessionId, message, conversationId } = data;
 
-  const openai = getOpenai();
+    const openai = getOpenai();
 
-  let previousConversation = [];
+    let previousConversation = [];
 
-  if (sessions[sessionId]) {
-    const existingConversation = sessions[sessionId].find(
-      (c) => c.id === conversationId
-    );
+    if (sessions[sessionId]) {
+      const existingConversation = sessions[sessionId].find(
+        (c) => c.id === conversationId
+      );
 
-    if (existingConversation) {
-      previousConversation = existingConversation.messages.map((m) => ({
-        content: m.content,
-        role: m.aiMessage ? "assistant" : "user",
-      }));
+      if (existingConversation) {
+        previousConversation = existingConversation.messages.map((m) => ({
+          content: m.content,
+          role: m.aiMessage ? "assistant" : "user",
+        }));
+      }
     }
-  }
 
-  const conversationHistory = [...previousConversation, message];
+    const conversationHistory = [...previousConversation, message];
 
-  const lastUserMessage = conversationHistory
-    .filter((msg) => msg.role === "user")
-    .pop();
+    const lastUserMessage = conversationHistory
+      .filter((msg) => msg.role === "user")
+      .pop();
 
-  if (lastUserMessage) {
-    try {
+    if (lastUserMessage) {
+      const prompt = `Assistente para Reparo de Injeção Eletrônica Automotiva: ${lastUserMessage.content}`;
+
       const response = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: `Assistente de Reparação de Automóveis a Gasolina, Especializado em Injeção Eletrônica. ${lastUserMessage.content}`,
-        temperature: 0.3,
-        max_tokens: 620,
-        top_p: 0.3,
+        prompt,
+        temperature: 0.5,
+        max_tokens: 300,
       });
 
       const aiMessageContent = response?.data?.choices[0]?.text;
@@ -70,7 +71,7 @@ const conversationMessageHandler = async (socket, data) => {
       const aiMessage = {
         content: aiMessageContent
           ? aiMessageContent
-          : "Erro da Inteligência Artificial, sem comunicação: REDE-NEURAL-P8493",
+          : "Desculpe, não consegui entender completamente. Pode reformular a pergunta?",
         id: uuid(),
         aiMessage: true,
       };
@@ -95,19 +96,17 @@ const conversationMessageHandler = async (socket, data) => {
       );
 
       socket.emit("conversation-details", updatedConversation);
-    } catch (error) {
-      console.error("Erro ao obter informações do DTC:", error);
-      const errorMessage = {
-        content: "Erro ao obter informações do DTC. Por favor, tente novamente mais tarde.",
-        id: uuid(),
-        aiMessage: true,
-      };
-
-      socket.emit("conversation-details", errorMessage);
     }
+  } catch (error) {
+    console.error("Erro ao processar a mensagem:", error);
+    const errorMessage = {
+      content: "Desculpe, ocorreu um erro. Por favor, tente novamente mais tarde.",
+      id: uuid(),
+      aiMessage: true,
+    };
+
+    socket.emit("conversation-details", errorMessage);
   }
 };
-
-
 
 module.exports = { registerSocketServer };
