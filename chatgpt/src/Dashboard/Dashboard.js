@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import Sidebar from "./Sidebar/Sidebar";
+import Sidebar from "../Sidebar/Sidebar";
 import Chat from "./Chat/Chat";
 
 import "./dashboard.css";
