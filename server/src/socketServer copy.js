@@ -51,21 +51,26 @@ const conversationMessageHandler = async (socket, data) => {
 
   const conversationHistory = [...previousConversation, message];
 
-  // Obter o DTC da última mensagem do usuário
   const lastUserMessage = conversationHistory
     .filter((msg) => msg.role === "user")
     .pop();
 
   if (lastUserMessage) {
     try {
-      // Obter informações sobre o código DTC
-      const dtcInformation = await getDtcInformation(lastUserMessage.content);
+      const response = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: `Reparação Automotiva, Explicar o código DTC EOBD2, Descrever os sintomas e procedimentos de reparação. ${lastUserMessage.content}`,
+        temperature: 0.3,
+        max_tokens: 220,
+        top_p: 0.3,
+      });
 
-      // Criar resposta do assistente com base nas informações do DTC
+      const aiMessageContent = response?.data?.choices[0]?.text;
+
       const aiMessage = {
-        content: dtcInformation
-          ? `**Código DTC:** ${lastUserMessage.content}\n\n**Descrição:** ${dtcInformation.description}\n\n**Possíveis Causas:** ${dtcInformation.causes.join(", ")}\n\n**Procedimentos de Reparo:**\n${dtcInformation.procedures.join("\n")}`
-          : "Erro da Inteligência Artificial, sem informações disponíveis para o código DTC inserido.",
+        content: aiMessageContent
+          ? aiMessageContent
+          : "Erro da Inteligência Artificial, sem comunicação: REDE-NEURAL-P8493",
         id: uuid(),
         aiMessage: true,
       };
@@ -82,7 +87,7 @@ const conversationMessageHandler = async (socket, data) => {
       }
 
       if (conversation) {
-        conversation.messages.push(...conversationHistory, aiMessage);
+        conversation.messages.push(aiMessage);
       }
 
       const updatedConversation = sessions[sessionId].find(
@@ -92,7 +97,6 @@ const conversationMessageHandler = async (socket, data) => {
       socket.emit("conversation-details", updatedConversation);
     } catch (error) {
       console.error("Erro ao obter informações do DTC:", error);
-      // Tratar erros ao obter informações do DTC
       const errorMessage = {
         content: "Erro ao obter informações do DTC. Por favor, tente novamente mais tarde.",
         id: uuid(),
