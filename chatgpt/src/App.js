@@ -3,13 +3,13 @@ import Dashboard from "./Dashboard/Dashboard";
 import { connectWithSocketServer } from "./socketConnection/socketConn";
 
 function App() {
-  useEffect(() =>{
+  useEffect(() => {
     connectWithSocketServer();
-  }, [] );
+  }, []);
 
   return (
-    <div className="App"> 
-    <Dashboard/>
+    <div className="App">
+      <Dashboard />
     </div>
   );
 }
