@@ -32,20 +32,16 @@ const Messages = () => {
       <div ref={scrollRef} />
     </div>
   ); */
-
   return (
-    <div className="chat_messages_container">
-      <ul>
-        {conversation?.messages.map((m, index) => (
-          <li key={m.id}>
-            <Message
-              content={m.content}
-              aiMessage={m.aiMessage}
-              animate={index === conversation.messages.length - 1 && m.aiMessage}
-            />
-          </li>
-        ))}
-      </ul>
+    <div className="chat_messages_container" style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+      {conversation?.messages.map((m, index) => (
+        <Message
+          key={m.id}
+          content={m.content}
+          aiMessage={m.aiMessage}
+          animate={index === conversation.messages.length - 1 && m.aiMessage}
+        />
+      ))}
       <div ref={scrollRef} />
     </div>
   );
