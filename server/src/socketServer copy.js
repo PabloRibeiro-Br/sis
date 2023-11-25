@@ -57,40 +57,53 @@ const conversationMessageHandler = async (socket, data) => {
     .pop();
 
   if (lastUserMessage) {
-    // Obter informações sobre o código DTC
-    const dtcInformation = await getDtcInformation(lastUserMessage.content);
+    try {
+      // Obter informações sobre o código DTC
+      const dtcInformation = await getDtcInformation(lastUserMessage.content);
 
-    // Criar resposta do assistente com base nas informações do DTC
-    const aiMessage = {
-      content: dtcInformation
-        ? `Código DTC: ${lastUserMessage.content}\nProcedimentos de reparo:\n${dtcInformation.procedures.join("\n")}`
-        : "Erro da Inteligência Artificial, sem informações disponíveis para o código DTC inserido.",
-      id: uuid(),
-      aiMessage: true,
-    };
+      // Criar resposta do assistente com base nas informações do DTC
+      const aiMessage = {
+        content: dtcInformation
+          ? `**Código DTC:** ${lastUserMessage.content}\n\n**Descrição:** ${dtcInformation.description}\n\n**Possíveis Causas:** ${dtcInformation.causes.join(", ")}\n\n**Procedimentos de Reparo:**\n${dtcInformation.procedures.join("\n")}`
+          : "Erro da Inteligência Artificial, sem informações disponíveis para o código DTC inserido.",
+        id: uuid(),
+        aiMessage: true,
+      };
 
-    const conversation = sessions[sessionId].find(
-      (c) => c.id === conversationId
-    );
+      const conversation = sessions[sessionId].find(
+        (c) => c.id === conversationId
+      );
 
-    if (!conversation) {
-      sessions[sessionId].push({
-        id: conversationId,
-        messages: [...conversationHistory, aiMessage],
-      });
+      if (!conversation) {
+        sessions[sessionId].push({
+          id: conversationId,
+          messages: [...conversationHistory, aiMessage],
+        });
+      }
+
+      if (conversation) {
+        conversation.messages.push(...conversationHistory, aiMessage);
+      }
+
+      const updatedConversation = sessions[sessionId].find(
+        (c) => c.id === conversationId
+      );
+
+      socket.emit("conversation-details", updatedConversation);
+    } catch (error) {
+      console.error("Erro ao obter informações do DTC:", error);
+      // Tratar erros ao obter informações do DTC
+      const errorMessage = {
+        content: "Erro ao obter informações do DTC. Por favor, tente novamente mais tarde.",
+        id: uuid(),
+        aiMessage: true,
+      };
+
+      socket.emit("conversation-details", errorMessage);
     }
-
-    if (conversation) {
-      conversation.messages.push(...conversationHistory, aiMessage);
-    }
-
-    const updatedConversation = sessions[sessionId].find(
-      (c) => c.id === conversationId
-    );
-
-    socket.emit("conversation-details", updatedConversation);
   }
 };
+
 
 
 module.exports = { registerSocketServer };
