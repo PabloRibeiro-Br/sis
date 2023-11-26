@@ -189,6 +189,7 @@
     overflow: hidden;
     vertical-align: middle;
     animation: dots 1.5s infinite;
+    color:firebrick;
   }
   
   @keyframes dots {
