@@ -4,6 +4,7 @@ import { BsSend } from "react-icons/bs";
 import { v4 as uuid } from "uuid";
 import { addMessage, setSelectedConversationId } from "../dashboardSlice";
 import { sendConversationMessage } from "../../socketConnection/socketConn";
+import "./NewMessageInput.css"; // Importe o arquivo de estilos
 
 const NewMessageInput = () => {
   const [content, setContent] = useState("");
@@ -80,7 +81,7 @@ const NewMessageInput = () => {
   ];
 
   return (
-    <div>
+    <div className="new-message-input-container">
       <input
         className="new_message_input"
         placeholder="Enviar mensagem..."
@@ -94,7 +95,14 @@ const NewMessageInput = () => {
           ].aiMessage
         }
       />
-      <button onClick={openModal}>Abrir Modal</button>
+      <div className="button-container">
+        <button className="send-button" onClick={handleSendMessage}>
+          <BsSend />
+        </button>
+        <button className="open-modal-button" onClick={openModal}>
+          Abrir Modal
+        </button>
+      </div>
       {showModal && (
         <div className="modal">
           <div className="modal-content">
