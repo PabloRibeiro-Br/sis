@@ -74,9 +74,9 @@ const conversationMessageHandler = async (socket, data) => {
     }
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: "Você é um assistente virtual de Mecânicos de Automóveis. Você responde para profissionais de reparação de automóveis, não para donos de véiculos." + message.content,
-               temperature: 0.3,
-               max_tokens: 220,
+      prompt: "Você é um Mecânico de Automóveis, Especializado em Injeção Eletrônica e Motores a Mais de 28 anos, Fale como um especialista no assunto. Você responde para profissionais de reparação de automóveis, não para donos de véiculos." + message.content,
+               temperature: 0.5,
+               max_tokens: 300,
                top_p: 0.3,
     });
 
