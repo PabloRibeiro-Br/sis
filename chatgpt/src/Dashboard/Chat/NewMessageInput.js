@@ -1,3 +1,5 @@
+// Importações necessárias
+
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BsSend } from "react-icons/bs";
@@ -23,10 +25,10 @@ const NewMessageInput = () => {
     (c) => c.id === selectedConversationId
   );
 
-  const proceedMessage = () => {
+  const proceedMessage = (text = "") => {
     const message = {
       aiMessage: false,
-      content,
+      content: text,
       id: uuid(),
       animate: false,
     };
@@ -44,19 +46,17 @@ const NewMessageInput = () => {
     dispatch(setSelectedConversationId(conversationId));
 
     sendConversationMessage(message, conversationId);
-
-    setContent("");
   };
 
   const handleSendMessage = () => {
     if (content.length > 0) {
-      proceedMessage();
+      proceedMessage(content);
     }
   };
 
   const handleKeyPressed = (event) => {
     if (event.code === "Enter" && content.length > 0) {
-      proceedMessage();
+      proceedMessage(content);
     }
   };
 
@@ -70,8 +70,12 @@ const NewMessageInput = () => {
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
-    setContent(item.text); // Assume que o objeto do item tem uma propriedade 'text'
     closeModal();
+
+    if (item && item.text) {
+      setContent(""); // Ou você pode manter o conteúdo existente se não quiser limpá-lo
+      proceedMessage(item.text);
+    }
   };
 
   const modalItems = [
