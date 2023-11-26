@@ -73,11 +73,11 @@ const conversationMessageHandler = async (socket, data) => {
 
     const prompt = conversationHistory.map(m => 
       `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`
-    ).join('\n');
+    ).join('\n') + "\nUser: " + message.content;
 
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: prompt,
+      prompt: "Você é um Mecânico de Automóveis, Especializado em Injeção Eletrônica e Motores a Mais de 28 anos, Fale como um especialista no assunto. Você responde para profissionais de reparação de automóveis, não para donos de veículos. Seja Objetivo, fale como um professor de mecânica.\n" + prompt,
       temperature: 0.1,
       max_tokens: 200,  
       top_p:0.8,
