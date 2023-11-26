@@ -29,83 +29,95 @@ const registerSocketServer = (server) => {
   });
 };
 
+const sessionHistoryHandler = (socket, data) => {
+  const { sessionId } = data;
+
+  if (sessions[sessionId]) {
+    
+    socket.emit("session-details", {
+      sessionId,
+      conversations: sessions[sessionId],
+    });
+  } else {
+    const newSessionId = uuid();
+
+    sessions[newSessionId] = [];
+
+    const sessionDetails = {
+      sessionId: newSessionId,
+      conversations: [],
+    };
+
+    socket.emit("session-details", sessionDetails);
+  }
+};
+
 const conversationMessageHandler = async (socket, data) => {
-  try {
-    const { sessionId, message, conversationId } = data;
+  const { sessionId, message, conversationId } = data;
 
-    const openai = getOpenai();
+  const openai = getOpenai();
 
-    let previousConversation = [];
+  const previousConversationMessages = [];
 
-    if (sessions[sessionId]) {
-      const existingConversation = sessions[sessionId].find(
-        (c) => c.id === conversationId
-      );
+  if (sessions[sessionId]) {
+    const existingConversation = sessions[sessionId].find(
+      (c) => c.id === conversationId
+    );
 
-      if (existingConversation) {
-        previousConversation = existingConversation.messages.map((m) => ({
+    if (existingConversation) {
+      previousConversationMessages.push(
+        ...existingConversation.messages.map((m) => ({
           content: m.content,
           role: m.aiMessage ? "assistant" : "user",
-        }));
-      }
-    }
-
-    const conversationHistory = [...previousConversation, message];
-
-    const lastUserMessage = conversationHistory
-      .filter((msg) => msg.role === "user")
-      .pop();
-
-    if (lastUserMessage) {
-      const prompt = `Assistente para Reparo de Injeção Eletrônica Automotiva: ${lastUserMessage.content}`;
-
-      const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt,
-        temperature: 0.5,
-        max_tokens: 300,
-      });
-
-      const aiMessageContent = response?.data?.choices[0]?.text;
-
-      const aiMessage = {
-        content: aiMessageContent
-          ? aiMessageContent
-          : "Desculpe, não consegui entender completamente. Pode reformular a pergunta?",
-        id: uuid(),
-        aiMessage: true,
-      };
-
-      const conversation = sessions[sessionId].find(
-        (c) => c.id === conversationId
+        }))
       );
-
-      if (!conversation) {
-        sessions[sessionId].push({
-          id: conversationId,
-          messages: [...conversationHistory, aiMessage],
-        });
-      }
-
-      if (conversation) {
-        conversation.messages.push(aiMessage);
-      }
-
-      const updatedConversation = sessions[sessionId].find(
-        (c) => c.id === conversationId
-      );
-
-      socket.emit("conversation-details", updatedConversation);
     }
-  } catch (error) {
-    console.error("Erro ao processar a mensagem:", error);
-    const errorMessage = {
-      content: "Desculpe, ocorreu um erro. Por favor, tente novamente mais tarde.",
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: "Reparação Automotiva, Explicar o código DTC EOBD2, Descrever os sintomas e procedimentos de reparação." + message.content,
+               temperature: 0.3,
+               max_tokens: 220,
+               top_p: 0.3,
+    });
+
+   const aiMessageContent = response?.data?.choices[0]?.text;
+
+    const aiMessage = {
+      content: aiMessageContent
+        ? aiMessageContent
+        : "Erro da Inteligência Artificial, sem comunicação: REDE-NEURAL-P8493",
       id: uuid(),
       aiMessage: true,
     };
 
-    socket.emit("conversation-details", errorMessage);
+    const conversation = sessions[sessionId].find(
+      (c) => c.id === conversationId
+    );
+
+    if (!conversation) {
+      sessions[sessionId].push({
+        id: conversationId,
+        messages: [message, aiMessage],
+      });
+    }
+
+    if (conversation) {
+      conversation.messages.push(message, aiMessage);
+    }
+
+    const updatedConversation = sessions[sessionId].find(
+      (c) => c.id === conversationId
+    );
+
+    socket.emit("conversation-details", updatedConversation);
+  }
+};
+
+const conversationDeleteHandler = (_, data) => {
+  const { sessionId } = data;
+
+  if (sessions[sessionId]) {
+    sessions[sessionId] = [];
   }
 };
 
