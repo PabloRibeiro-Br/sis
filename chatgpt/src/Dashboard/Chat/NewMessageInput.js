@@ -7,7 +7,6 @@ import { sendConversationMessage } from "../../socketConnection/socketConn";
 
 const NewMessageInput = () => {
   const [content, setContent] = useState("");
-  const [isProcessing, setProcessing] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -21,7 +20,7 @@ const NewMessageInput = () => {
     (c) => c.id === selectedConversationId
   );
 
-  const proceedMessage = async () => {
+  const proceedMessage = () => {
     const message = {
       aiMessage: false,
       content,
@@ -29,9 +28,12 @@ const NewMessageInput = () => {
       animate: false,
     };
 
+    console.log(message);
+
     const conversationId =
       selectedConversationId === "new" ? uuid() : selectedConversationId;
 
+    // append this message to our local store
     dispatch(
       addMessage({
         conversationId,
@@ -41,40 +43,27 @@ const NewMessageInput = () => {
 
     dispatch(setSelectedConversationId(conversationId));
 
-    setProcessing(true);
+    // send message to the server
+    sendConversationMessage(message, conversationId);
 
-    try {
-      await sendConversationMessage(message, conversationId);
-    } catch (error) {
-      console.error("Erro ao enviar mensagem:", error);
-    } finally {
-      setProcessing(false);
-    }
-
+    // reset value of the input
     setContent("");
   };
 
   const handleSendMessage = () => {
-    if (content.length > 0 && !isProcessing) {
+    if (content.length > 0) {
       proceedMessage();
     }
   };
 
   const handleKeyPressed = (event) => {
-    if (event.code === "Enter" && content.length > 0 && !isProcessing) {
+    if (event.code === "Enter" && content.length > 0) {
       proceedMessage();
     }
   };
 
   return (
     <div className="new_message_input_container">
-      <div className="new_message_icon_container" onClick={handleSendMessage}>
-        {isProcessing ? (
-          <div className="dots-animation">...</div>
-        ) : (
-          <BsSend color="grey" />
-        )}
-      </div>
       <input
         className="new_message_input"
         placeholder="Enviar mensagem..."
@@ -88,6 +77,9 @@ const NewMessageInput = () => {
           ].aiMessage
         }
       />
+      <div className="new_message_icon_container" onClick={handleSendMessage}>
+        <BsSend color="grey" />
+      </div>
     </div>
   );
 };

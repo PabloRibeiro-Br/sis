@@ -168,10 +168,10 @@
   }
   .spinner {
       margin: 0 auto;
-      height: 64px;
-      width: 64px;
+      height: 44px;
+      width: 44px;
       animation: rotate 0.8s infinite linear;
-      border: 5px solid firebrick;
+      border: 5px solid #666666;
       border-right-color: transparent;
       border-radius: 50%;
   }
@@ -183,33 +183,6 @@
           transform: rotate(360deg);
       }
   }
-
-  .dots-animation {
-    display: inline-block;
-    overflow: hidden;
-    vertical-align: middle;
-    animation: dots 1.5s infinite;
-  }
-  
-  @keyframes dots {
-    0%, 20% {
-      color: transparent;
-      text-shadow: 0.25em 0 0 transparent, 0.5em 0 0 transparent;
-    }
-    40% {
-      color: #333; /* Cor dos pontos */
-      text-shadow: 0.25em 0 0 #333, 0.5em 0 0 #333;
-    }
-    60% {
-      text-shadow: 0.25em 0 0 transparent, 0.5em 0 0 transparent;
-    }
-    80%, 100% {
-      color: transparent;
-      text-shadow: 0.25em 0 0 transparent, 0.5em 0 0 transparent;
-    }
-  }
-  
-
 
   .delete_conv_button {
     position: absolute;
