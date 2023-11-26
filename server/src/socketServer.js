@@ -76,9 +76,12 @@ const conversationMessageHandler = async (socket, data) => {
       model: "text-davinci-003",
       prompt: "Você é um Mecânico de Automóveis, Especializado em Injeção Eletrônica e Motores a Mais de 28 anos, Fale como um especialista no assunto. Você responde para profissionais de reparação de automóveis, não para donos de véiculos. Seja Objetivo, fale como um professor de mecânica." + message.content,
                temperature: 0.1,
-               max_tokens: 200,
-               top_p: 0.3,
-    });
+               max_tokens: 200,  
+               top_p:0.8,
+               presence_penalty:0.8,
+               frequency_penalty:0.8,
+               n:2, 
+        });
 
    const aiMessageContent = response?.data?.choices[0]?.text;
 
