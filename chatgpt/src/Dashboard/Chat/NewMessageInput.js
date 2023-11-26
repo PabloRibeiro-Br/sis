@@ -11,7 +11,6 @@ import "./NewMessageInput.css"; // Importe o arquivo de estilos
 const NewMessageInput = () => {
   const [content, setContent] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -47,6 +46,7 @@ const NewMessageInput = () => {
 
     sendConversationMessage(message, conversationId);
 
+    setContent("");
   };
 
   const handleSendMessage = () => {
@@ -72,17 +72,17 @@ const NewMessageInput = () => {
   const handleItemClick = (item) => {
     closeModal();
 
-    if (item && item.text) {
-      const combinedContent = `${content} ${item.text}`.trim();
+    if (item && item.description) {
+      const combinedContent = `${content} ${item.description}`.trim();
       setContent(combinedContent);
       proceedMessage(combinedContent);
     }
   };
 
   const modalItems = [
-    { id: 1, text: "Item 1" },
-    { id: 2, text: "Item 2" },
-    { id: 3, text: "Item 3" },
+    { id: 1, title: "Lubrificante do Motor", description: "Qual lubrificante recomendado para o motor deste veículo." },
+    { id: 2, title: "Item 2", description: "Descrição do Item 2" },
+    { id: 3, title: "Item 3", description: "Descrição do Item 3" },
   ];
 
   return (
@@ -117,7 +117,7 @@ const NewMessageInput = () => {
             <ul>
               {modalItems.map((item) => (
                 <li key={item.id} onClick={() => handleItemClick(item)}>
-                  {item.text}
+                  {item.title}
                 </li>
               ))}
             </ul>
