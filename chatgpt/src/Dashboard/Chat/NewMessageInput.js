@@ -68,6 +68,13 @@ const NewMessageInput = () => {
 
   return (
     <div className="new_message_input_container">
+      <div className="new_message_icon_container" onClick={handleSendMessage}>
+        {isProcessing ? (
+          <div className="dots-animation">...</div>
+        ) : (
+          <BsSend color="grey" />
+        )}
+      </div>
       <input
         className="new_message_input"
         placeholder="Enviar mensagem..."
@@ -81,13 +88,6 @@ const NewMessageInput = () => {
           ].aiMessage
         }
       />
-      <div className="new_message_icon_container" onClick={handleSendMessage}>
-        {isProcessing ? (
-          <div className="dots-animation">...</div>
-        ) : (
-          <BsSend color="grey" />
-        )}
-      </div>
     </div>
   );
 };
