@@ -2,106 +2,123 @@ const { Server } = require("socket.io");
 const { v4: uuid } = require("uuid");
 const { getOpenai } = require("./ai");
 
-class AutoMechanicAssistant {
-  constructor() {
-    this.sessions = {};
-    this.io = null;
-  }
+let sessions = {};
 
-  registerSocketServer(server) {
-    this.io = new Server(server, {
-      cors: {
-        origin: "*",
-        methods: ["GET", "POST"],
-      },
+const registerSocketServer = (server) => {
+  const io = new Server(server, {
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+    },
+  });
+
+  io.on("connection", (socket) => {
+    console.log(`user connected ${socket.id}`);
+
+    socket.on("session-history", (data) => {
+      sessionHistoryHandler(socket, data);
     });
 
-    this.io.on("connection", (socket) => {
-      console.log(`User connected: ${socket.id}`);
-
-      socket.on("session-history", (data) => this.handleSessionHistory(socket, data));
-
-      socket.on("conversation-message", (data) => this.handleConversationMessage(socket, data));
-
-      socket.on("conversation-delete", (data) => this.handleConversationDelete(socket, data));
+    socket.on("conversation-message", (data) => {
+      conversationMessageHandler(socket, data);
     });
-  }
 
-  getSession(sessionId) {
-    if (this.sessions[sessionId]) {
-      return this.sessions[sessionId];
-    } else {
-      const newSessionId = uuid();
-      this.sessions[newSessionId] = [];
-      return this.sessions[newSessionId];
-    }
-  }
+    socket.on("conversation-delete", (data) => {
+      conversationDeleteHandler(socket, data);
+    });
+  });
+};
 
-  async handleSessionHistory(socket, data) {
-    const { sessionId } = data;
-    const conversations = this.getSession(sessionId);
+const sessionHistoryHandler = (socket, data) => {
+  const { sessionId } = data;
 
+  if (sessions[sessionId]) {
+    
     socket.emit("session-details", {
       sessionId,
-      conversations,
+      conversations: sessions[sessionId],
     });
+  } else {
+    const newSessionId = uuid();
+
+    sessions[newSessionId] = [];
+
+    const sessionDetails = {
+      sessionId: newSessionId,
+      conversations: [],
+    };
+
+    socket.emit("session-details", sessionDetails);
   }
+};
 
-  async handleConversationMessage(socket, data) {
-    const { sessionId, message, conversationId } = data;
-    const openai = getOpenai();
+const conversationMessageHandler = async (socket, data) => {
+  const { sessionId, message, conversationId } = data;
 
-    const previousConversationMessages = this.getSession(sessionId)
-      .filter((c) => c.id === conversationId)
-      .flatMap((c) => c.messages)
-      .map((m) => ({
-        content: m.content,
-        role: m.aiMessage ? "assistant" : "user",
-      }));
+  const openai = getOpenai();
 
+  const previousConversationMessages = [];
+
+  if (sessions[sessionId]) {
+    const existingConversation = sessions[sessionId].find(
+      (c) => c.id === conversationId
+    );
+
+    if (existingConversation) {
+      previousConversationMessages.push(
+        ...existingConversation.messages.map((m) => ({
+          content: m.content,
+          role: m.aiMessage ? "assistant" : "user",
+        }))
+      );
+    }
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: "Reparação Automotiva" + message.content,
-      temperature: 0.3,
-      max_tokens: 220,
-      top_p: 0.3,
+      prompt: "Você é um assistente virtual de Mecânicos de Automóveis." + message.content,
+               temperature: 0.3,
+               max_tokens: 220,
+               top_p: 0.3,
     });
 
-    const aiMessageContent = response?.data?.choices[0]?.text;
+   const aiMessageContent = response?.data?.choices[0]?.text;
 
     const aiMessage = {
-      content: aiMessageContent ? aiMessageContent : "Erro da Inteligência Artificial, sem comunicação: REDE-NEURAL-P8493",
+      content: aiMessageContent
+        ? aiMessageContent
+        : "Erro da Inteligência Artificial, sem comunicação: REDE-NEURAL-P8493",
       id: uuid(),
       aiMessage: true,
     };
 
-    const session = this.getSession(sessionId);
-    const conversation = session.find((c) => c.id === conversationId);
+    const conversation = sessions[sessionId].find(
+      (c) => c.id === conversationId
+    );
 
     if (!conversation) {
-      session.push({
+      sessions[sessionId].push({
         id: conversationId,
         messages: [message, aiMessage],
       });
-    } else {
+    }
+
+    if (conversation) {
       conversation.messages.push(message, aiMessage);
     }
 
-    socket.emit("conversation-details", {
-      id: conversationId,
-      messages: [...previousConversationMessages, { content: message.content, role: "user" }, aiMessage],
-    });
+    const updatedConversation = sessions[sessionId].find(
+      (c) => c.id === conversationId
+    );
+
+    socket.emit("conversation-details", updatedConversation);
   }
+};
 
-  handleConversationDelete(socket, data) {
-    const { sessionId } = data;
+const conversationDeleteHandler = (_, data) => {
+  const { sessionId } = data;
 
-    if (this.sessions[sessionId]) {
-      this.sessions[sessionId] = [];
-    }
+  if (sessions[sessionId]) {
+    sessions[sessionId] = [];
   }
-}
+};
 
-const autoMechanicAssistant = new AutoMechanicAssistant();
-
-module.exports = { registerSocketServer: (server) => autoMechanicAssistant.registerSocketServer(server) };
+module.exports = { registerSocketServer };
