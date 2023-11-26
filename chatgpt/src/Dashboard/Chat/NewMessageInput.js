@@ -55,7 +55,6 @@ const NewMessageInput = () => {
     sendConversationMessage(message, conversationId);
 
     setContent("");
-    setSelectedItem(null); // Limpa o item selecionado após enviar a mensagem
   };
 
   const handleSendMessage = () => {
