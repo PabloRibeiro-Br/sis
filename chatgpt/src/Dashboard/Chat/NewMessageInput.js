@@ -25,17 +25,10 @@ const NewMessageInput = () => {
     (c) => c.id === selectedConversationId
   );
 
-  const proceedMessage = () => {
-    let combinedContent = content;
-
-    if (selectedItem && selectedItem.text) {
-      // Se houver um item selecionado, concatene com o conteúdo existente
-      combinedContent += ` ${selectedItem.text}`;
-    }
-
+  const proceedMessage = (text) => {
     const message = {
       aiMessage: false,
-      content: combinedContent,
+      content: text,
       id: uuid(),
       animate: false,
     };
@@ -54,18 +47,17 @@ const NewMessageInput = () => {
 
     sendConversationMessage(message, conversationId);
 
-    setContent("");
   };
 
   const handleSendMessage = () => {
     if (content.length > 0) {
-      proceedMessage();
+      proceedMessage(content);
     }
   };
 
   const handleKeyPressed = (event) => {
     if (event.code === "Enter" && content.length > 0) {
-      proceedMessage();
+      proceedMessage(content);
     }
   };
 
@@ -78,12 +70,17 @@ const NewMessageInput = () => {
   };
 
   const handleItemClick = (item) => {
-    setSelectedItem(item);
     closeModal();
+
+    if (item && item.text) {
+      const combinedContent = `${content} ${item.text}`.trim();
+      setContent(combinedContent);
+      proceedMessage(combinedContent);
+    }
   };
 
   const modalItems = [
-    { id: 1, text: "Óleo do Motor Recomendado pela montadora" },
+    { id: 1, text: "Item 1" },
     { id: 2, text: "Item 2" },
     { id: 3, text: "Item 3" },
   ];
