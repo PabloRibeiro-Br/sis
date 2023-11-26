@@ -7,6 +7,8 @@ import { sendConversationMessage } from "../../socketConnection/socketConn";
 
 const NewMessageInput = () => {
   const [content, setContent] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -28,12 +30,9 @@ const NewMessageInput = () => {
       animate: false,
     };
 
-    console.log(message);
-
     const conversationId =
       selectedConversationId === "new" ? uuid() : selectedConversationId;
 
-    // append this message to our local store
     dispatch(
       addMessage({
         conversationId,
@@ -43,10 +42,8 @@ const NewMessageInput = () => {
 
     dispatch(setSelectedConversationId(conversationId));
 
-    // send message to the server
     sendConversationMessage(message, conversationId);
 
-    // reset value of the input
     setContent("");
   };
 
@@ -62,8 +59,28 @@ const NewMessageInput = () => {
     }
   };
 
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+    setContent(item.text); // Assume que o objeto do item tem uma propriedade 'text'
+    closeModal();
+  };
+
+  const modalItems = [
+    { id: 1, text: "Item 1" },
+    { id: 2, text: "Item 2" },
+    { id: 3, text: "Item 3" },
+  ];
+
   return (
-    <div className="new_message_input_container">
+    <div>
       <input
         className="new_message_input"
         placeholder="Enviar mensagem..."
@@ -77,9 +94,23 @@ const NewMessageInput = () => {
           ].aiMessage
         }
       />
-      <div className="new_message_icon_container" onClick={handleSendMessage}>
-        <BsSend color="grey" />
-      </div>
+      <button onClick={openModal}>Abrir Modal</button>
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeModal}>
+              &times;
+            </span>
+            <ul>
+              {modalItems.map((item) => (
+                <li key={item.id} onClick={() => handleItemClick(item)}>
+                  {item.text}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
