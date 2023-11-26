@@ -7,6 +7,7 @@ import { sendConversationMessage } from "../../socketConnection/socketConn";
 
 const NewMessageInput = () => {
   const [content, setContent] = useState("");
+  const [isProcessing, setProcessing] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -20,7 +21,7 @@ const NewMessageInput = () => {
     (c) => c.id === selectedConversationId
   );
 
-  const proceedMessage = () => {
+  const proceedMessage = async () => {
     const message = {
       aiMessage: false,
       content,
@@ -28,12 +29,9 @@ const NewMessageInput = () => {
       animate: false,
     };
 
-    console.log(message);
-
     const conversationId =
       selectedConversationId === "new" ? uuid() : selectedConversationId;
 
-    // append this message to our local store
     dispatch(
       addMessage({
         conversationId,
@@ -43,21 +41,27 @@ const NewMessageInput = () => {
 
     dispatch(setSelectedConversationId(conversationId));
 
-    // send message to the server
-    sendConversationMessage(message, conversationId);
+    setProcessing(true);
 
-    // reset value of the input
+    try {
+      await sendConversationMessage(message, conversationId);
+    } catch (error) {
+      console.error("Erro ao enviar mensagem:", error);
+    } finally {
+      setProcessing(false);
+    }
+
     setContent("");
   };
 
   const handleSendMessage = () => {
-    if (content.length > 0) {
+    if (content.length > 0 && !isProcessing) {
       proceedMessage();
     }
   };
 
   const handleKeyPressed = (event) => {
-    if (event.code === "Enter" && content.length > 0) {
+    if (event.code === "Enter" && content.length > 0 && !isProcessing) {
       proceedMessage();
     }
   };
@@ -78,7 +82,11 @@ const NewMessageInput = () => {
         }
       />
       <div className="new_message_icon_container" onClick={handleSendMessage}>
-        <BsSend color="grey" />
+        {isProcessing ? (
+          <div className="dots-animation">...</div>
+        ) : (
+          <BsSend color="grey" />
+        )}
       </div>
     </div>
   );
