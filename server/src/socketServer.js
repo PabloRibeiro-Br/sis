@@ -33,21 +33,18 @@ const sessionHistoryHandler = (socket, data) => {
   const { sessionId } = data;
 
   if (sessions[sessionId]) {
-
+    // send existing session data back to user
     socket.emit("session-details", {
       sessionId,
       conversations: sessions[sessionId],
     });
   } else {
     const newSessionId = uuid();
-
     sessions[newSessionId] = [];
-
     const sessionDetails = {
       sessionId: newSessionId,
       conversations: [],
     };
-
     socket.emit("session-details", sessionDetails);
   }
 };
@@ -56,8 +53,6 @@ const conversationMessageHandler = async (socket, data) => {
   const { sessionId, message, conversationId } = data;
 
   const openai = getOpenai();
-
-  let conversationHistory = [];
 
   const previousConversationMessages = [];
 
@@ -74,23 +69,13 @@ const conversationMessageHandler = async (socket, data) => {
         }))
       );
     }
-    if (existingConversation) {
-      conversationHistory = existingConversation.messages.map((m) => ({
-        content: m.content,
-        role: m.aiMessage ? "assistant" : "user",
-      }));
-    }
-    const prompt = conversationHistory.map(m => m.content).join('\n') + "\n" + message.content;
 
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: "Você é um Mecânico de Automóveis, Especializado em Injeção Eletrônica e Motores a Mais de 28 anos, Fale como um especialista no assunto. Você responde para profissionais de reparação de automóveis, não para donos de veículos. Seja Objetivo, fale como um professor de mecânica.\n" + prompt,
-      temperature: 0.1,
-      max_tokens: 200,  
-      top_p:0.8,
-      presence_penalty:0.8,
-      frequency_penalty:0.8,
-      n:2, 
+    const response = await openai.createChatCompletion({
+      model: "text-davinci-003",  // Alteração aqui para o modelo desejado
+      messages: [
+        ...previousConversationMessages,
+        { role: "user", content: message.content },
+      ],
     });
 
     const aiMessageContent = response?.data?.choices[0]?.message?.content;
