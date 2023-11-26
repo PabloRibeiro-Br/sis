@@ -25,10 +25,17 @@ const NewMessageInput = () => {
     (c) => c.id === selectedConversationId
   );
 
-  const proceedMessage = (text = "") => {
+  const proceedMessage = () => {
+    let combinedContent = content;
+
+    if (selectedItem && selectedItem.text) {
+      // Se houver um item selecionado, concatene com o conteúdo existente
+      combinedContent += ` ${selectedItem.text}`;
+    }
+
     const message = {
       aiMessage: false,
-      content: text,
+      content: combinedContent,
       id: uuid(),
       animate: false,
     };
@@ -46,17 +53,20 @@ const NewMessageInput = () => {
     dispatch(setSelectedConversationId(conversationId));
 
     sendConversationMessage(message, conversationId);
+
+    setContent("");
+    setSelectedItem(null); // Limpa o item selecionado após enviar a mensagem
   };
 
   const handleSendMessage = () => {
     if (content.length > 0) {
-      proceedMessage(content);
+      proceedMessage();
     }
   };
 
   const handleKeyPressed = (event) => {
     if (event.code === "Enter" && content.length > 0) {
-      proceedMessage(content);
+      proceedMessage();
     }
   };
 
@@ -71,15 +81,10 @@ const NewMessageInput = () => {
   const handleItemClick = (item) => {
     setSelectedItem(item);
     closeModal();
-
-    if (item && item.text) {
-      setContent(""); // Ou você pode manter o conteúdo existente se não quiser limpá-lo
-      proceedMessage(item.text);
-    }
   };
 
   const modalItems = [
-    { id: 1, text: "Item 1" },
+    { id: 1, text: "Óleo do Motor Recomendado pela montadora" },
     { id: 2, text: "Item 2" },
     { id: 3, text: "Item 3" },
   ];
