@@ -7,7 +7,7 @@ import NewMessageInput from "./NewMessageInput";
 const ChatLogo = () => {
   return (
     <div className="chat_gpt_logo_container">
-      <p className="chat_gpt_logo">ChatGPT</p>
+      <p className="chat_gpt_logo">aiRepair</p>
     </div>
   );
 };
