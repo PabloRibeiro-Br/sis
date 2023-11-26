@@ -33,7 +33,7 @@ const sessionHistoryHandler = (socket, data) => {
   const { sessionId } = data;
 
   if (sessions[sessionId]) {
-    
+
     socket.emit("session-details", {
       sessionId,
       conversations: sessions[sessionId],
@@ -59,18 +59,27 @@ const conversationMessageHandler = async (socket, data) => {
 
   let conversationHistory = [];
 
+  const previousConversationMessages = [];
+
   if (sessions[sessionId]) {
     const existingConversation = sessions[sessionId].find(
       (c) => c.id === conversationId
     );
 
     if (existingConversation) {
+      previousConversationMessages.push(
+        ...existingConversation.messages.map((m) => ({
+          content: m.content,
+          role: m.aiMessage ? "assistant" : "user",
+        }))
+      );
+    }
+    if (existingConversation) {
       conversationHistory = existingConversation.messages.map((m) => ({
         content: m.content,
         role: m.aiMessage ? "assistant" : "user",
       }));
     }
-
     const prompt = conversationHistory.map(m => m.content).join('\n') + "\n" + message.content;
 
     const response = await openai.createCompletion({
@@ -84,12 +93,12 @@ const conversationMessageHandler = async (socket, data) => {
       n:2, 
     });
 
-    const aiMessageContent = response?.data?.choices[0]?.text;
+    const aiMessageContent = response?.data?.choices[0]?.message?.content;
 
     const aiMessage = {
       content: aiMessageContent
         ? aiMessageContent
-        : "Erro da Inteligência Artificial, sem comunicação: REDE-NEURAL-P8493",
+        : "Error occurred when trying to get message from the AI",
       id: uuid(),
       aiMessage: true,
     };
@@ -114,6 +123,14 @@ const conversationMessageHandler = async (socket, data) => {
     );
 
     socket.emit("conversation-details", updatedConversation);
+  }
+};
+
+const conversationDeleteHandler = (_, data) => {
+  const { sessionId } = data;
+
+  if (sessions[sessionId]) {
+    sessions[sessionId] = [];
   }
 };
 
