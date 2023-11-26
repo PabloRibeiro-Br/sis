@@ -29,92 +29,85 @@ const registerSocketServer = (server) => {
   });
 };
 
-const sessionHistoryHandler = (socket, data) => {
-  const { sessionId } = data;
-
-  if (sessions[sessionId]) {
-    
-    socket.emit("session-details", {
-      sessionId,
-      conversations: sessions[sessionId],
-    });
-  } else {
-    const newSessionId = uuid();
-
-    sessions[newSessionId] = [];
-
-    const sessionDetails = {
-      sessionId: newSessionId,
-      conversations: [],
-    };
-
-    socket.emit("session-details", sessionDetails);
-  }
-};
-
 const conversationMessageHandler = async (socket, data) => {
-  const { sessionId, message, conversationId } = data;
+  try {
+    const { sessionId, message, conversationId } = data;
 
-  const openai = getOpenai();
+    const openai = getOpenai();
 
-  let conversationHistory = [];
+    let previousConversation = [];
 
-  if (sessions[sessionId]) {
-    const existingConversation = sessions[sessionId].find(
-      (c) => c.id === conversationId
-    );
+    if (sessions[sessionId]) {
+      const existingConversation = sessions[sessionId].find(
+        (c) => c.id === conversationId
+      );
 
-    if (existingConversation) {
-      conversationHistory = existingConversation.messages.map((m) => ({
-        content: m.content,
-        role: m.aiMessage ? "assistant" : "user",
-      }));
+      if (existingConversation) {
+        previousConversation = existingConversation.messages.map((m) => ({
+          content: m.content,
+          role: m.aiMessage ? "assistant" : "user",
+        }));
+      }
     }
 
-    const prompt = conversationHistory.map(m => m.content).join('\n') + "\n" + message.content;
+    const conversationHistory = [...previousConversation, message];
 
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: "Você é um Mecânico de Automóveis, Especializado em Injeção Eletrônica e Motores a Mais de 28 anos, Fale como um especialista no assunto. Você responde para profissionais de reparação de automóveis, não para donos de veículos. Seja Objetivo, fale como um professor de mecânica.\n" + prompt,
-      temperature: 0.1,
-      max_tokens: 200,  
-      top_p:0.8,
-      presence_penalty:0.8,
-      frequency_penalty:0.8,
-      n:2, 
-    });
+    const lastUserMessage = conversationHistory
+      .filter((msg) => msg.role === "user")
+      .pop();
 
-    const aiMessageContent = response?.data?.choices[0]?.text;
+    if (lastUserMessage) {
+      const prompt = `Assistente para Reparo de Injeção Eletrônica Automotiva: ${lastUserMessage.content}`;
 
-    const aiMessage = {
-      content: aiMessageContent
-        ? aiMessageContent
-        : "Erro da Inteligência Artificial, sem comunicação: REDE-NEURAL-P8493",
+      const response = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt,
+        temperature: 0.5,
+        max_tokens: 300,
+      });
+
+      const aiMessageContent = response?.data?.choices[0]?.text;
+
+      const aiMessage = {
+        content: aiMessageContent
+          ? aiMessageContent
+          : "Desculpe, não consegui entender completamente. Pode reformular a pergunta?",
+        id: uuid(),
+        aiMessage: true,
+      };
+
+      const conversation = sessions[sessionId].find(
+        (c) => c.id === conversationId
+      );
+
+      if (!conversation) {
+        sessions[sessionId].push({
+          id: conversationId,
+          messages: [...conversationHistory, aiMessage],
+        });
+      }
+
+      if (conversation) {
+        conversation.messages.push(aiMessage);
+      }
+
+      const updatedConversation = sessions[sessionId].find(
+        (c) => c.id === conversationId
+      );
+
+      socket.emit("conversation-details", updatedConversation);
+    }
+  } catch (error) {
+    console.error("Erro ao processar a mensagem:", error);
+    const errorMessage = {
+      content: "Desculpe, ocorreu um erro. Por favor, tente novamente mais tarde.",
       id: uuid(),
       aiMessage: true,
     };
 
-    const conversation = sessions[sessionId].find(
-      (c) => c.id === conversationId
-    );
-
-    if (!conversation) {
-      sessions[sessionId].push({
-        id: conversationId,
-        messages: [message, aiMessage],
-      });
-    }
-
-    if (conversation) {
-      conversation.messages.push(message, aiMessage);
-    }
-
-    const updatedConversation = sessions[sessionId].find(
-      (c) => c.id === conversationId
-    );
-
-    socket.emit("conversation-details", updatedConversation);
+    socket.emit("conversation-details", errorMessage);
   }
 };
+
 
 module.exports = { registerSocketServer };

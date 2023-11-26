@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { GrUser } from "react-icons/gr";
 import { FcMindMap } from "react-icons/fc";
 
+import AiRepairLogo from "../../images/airepair.png";
+
 const SlowText = (props) => {
   const { speed, text } = props;
 
@@ -30,7 +32,8 @@ const Message = ({ content, aiMessage, animate }) => {
       style={{ background: aiMessage ? "rgb(247, 247, 248)" : "white" }}
     >
       <div className="message_avatar_container">
-        {aiMessage ? <FcMindMap /> : <GrUser />}
+       
+        {aiMessage ? <img src={AiRepairLogo} alt="Custom Icon" /> : <GrUser />}
       </div>
       <p className="message_text">
         {animate ? <SlowText speed={20} text={content} /> : content}

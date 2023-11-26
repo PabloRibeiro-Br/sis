@@ -33,7 +33,7 @@ const sessionHistoryHandler = (socket, data) => {
   const { sessionId } = data;
 
   if (sessions[sessionId]) {
-
+    
     socket.emit("session-details", {
       sessionId,
       conversations: sessions[sessionId],
@@ -71,19 +71,20 @@ const conversationMessageHandler = async (socket, data) => {
       }));
     }
 
-    const prompt = conversationHistory.map(m => m.content).join('\n') + "\n" + "\n" + message.content;
+    const prompt = conversationHistory.map(m => m.content).join('\n') + "\n" + message.content;
 
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: "Você é um Mecânico de Automóveis, Especializado em Injeção Eletrônica e Motores, com mais de 30 anos de experiência. Fale como um especialista no assunto. Você responde para profissionais de reparação de automóveis, não para donos de veículos. Seja Objetivo, fale como um professor de mecânica.\n" + prompt,
+      prompt: "Você é um Mecânico de Automóveis, Especializado em Injeção Eletrônica e Motores a Mais de 28 anos, Fale como um especialista no assunto. Você responde para profissionais de reparação de automóveis, não para donos de veículos. Seja Objetivo, fale como um professor de mecânica.\n" + prompt,
       temperature: 0.1,
-      max_tokens: 180,  
+      max_tokens: 200,  
       top_p:0.8,
-      presence_penalty:0.9,
-      frequency_penalty:0.9,
+      presence_penalty:0.8,
+      frequency_penalty:0.8,
+      n:2, 
     });
 
-    const aiMessageContent = response?.data?.choices[0]?.text.content;
+    const aiMessageContent = response?.data?.choices[0]?.text;
 
     const aiMessage = {
       content: aiMessageContent
@@ -115,4 +116,5 @@ const conversationMessageHandler = async (socket, data) => {
     socket.emit("conversation-details", updatedConversation);
   }
 };
+
 module.exports = { registerSocketServer };
