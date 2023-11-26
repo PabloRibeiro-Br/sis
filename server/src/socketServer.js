@@ -71,9 +71,7 @@ const conversationMessageHandler = async (socket, data) => {
       }));
     }
 
-    const prompt = conversationHistory.map(m => 
-      `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`
-    ).join('\n') + "\nUser: " + message.content;
+    const prompt = conversationHistory.map(m => m.content).join('\n') + "\n" + message.content;
 
     const response = await openai.createCompletion({
       model: "text-davinci-003",
