@@ -168,10 +168,10 @@
   }
   .spinner {
       margin: 0 auto;
-      height: 44px;
-      width: 44px;
+      height: 64px;
+      width: 64px;
       animation: rotate 0.8s infinite linear;
-      border: 5px solid #666666;
+      border: 5px solid firebrick;
       border-right-color: transparent;
       border-radius: 50%;
   }
@@ -183,6 +183,7 @@
           transform: rotate(360deg);
       }
   }
+
 
   .delete_conv_button {
     position: absolute;

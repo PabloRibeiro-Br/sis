@@ -20,7 +20,7 @@ const DeleteConversationsButton = () => {
       <div className="list_item_icon">
         <AiOutlineDelete color="white" />
       </div>
-      <p className="list_item_text">Excluir Pesquisa</p>
+      <p className="list_item_text">Delete conversations</p>
     </div>
   );
 };
