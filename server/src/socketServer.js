@@ -75,12 +75,12 @@ const conversationMessageHandler = async (socket, data) => {
 
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: "Você é um Mecânico de Automóveis, Especializado em Injeção Eletrônica e Motores a Mais de 28 anos, Fale como um especialista no assunto. Você responde para profissionais de reparação de automóveis, não para donos de veículos. Seja Objetivo, fale como um professor de mecânica.\n" + prompt,
-      temperature: 0.1,
-      max_tokens: 200,  
-      top_p:0.8,
-      presence_penalty:0.8,
-      frequency_penalty:0.8,
+      prompt: "Você é um Assistente aos Mecânicos de Automóveis. Você está conversando com Mecânicos, por isso realize as respostas didaticamente, explicando, e seja objetivo, não fique exibindo a pergunta do usuário novamente.\n" + prompt,
+      temperature: 0,
+      max_tokens: 180,  
+      top_p:0.9,
+      presence_penalty:0.9,
+      frequency_penalty:0.9,
       n:2, 
     });
 
