@@ -10,7 +10,6 @@ import "./NewMessageInput.css";
 const NewMessageInput = () => {
   const [content, setContent] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [selectedModalData, setSelectedModalData] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -63,12 +62,10 @@ const NewMessageInput = () => {
 
   const openModal = () => {
     setShowModal(true);
-    setSelectedModalData(null); // Reinicia os dados do modal selecionado
   };
 
   const closeModal = () => {
     setShowModal(false);
-    setSelectedModalData(null);
   };
 
   const handleItemClick = (item) => {
@@ -90,7 +87,8 @@ const NewMessageInput = () => {
   const openExtraModal = (button) => {
     setShowModal(true);
     const modalData = require(`./modalData${button.id}`).default;
-    setSelectedModalData(modalData);
+    // Adicione lógica para lidar com os dados do modal
+    console.log(`Modal Data for ${button.label}:`, modalData);
   };
 
   return (
@@ -132,19 +130,13 @@ const NewMessageInput = () => {
             <span className="close" onClick={closeModal}>
               &times;
             </span>
-            {selectedModalData ? (
-              // Renderiza o conteúdo do modal selecionado
-              <div>{selectedModalData}</div>
-            ) : (
-              // Renderiza o conteúdo padrão do modal
-              <ul>
-                {modalItems.map((item) => (
-                  <li key={item.id} onClick={() => handleItemClick(item)}>
-                    {item.title}
-                  </li>
-                ))}
-              </ul>
-            )}
+            <ul>
+              {modalItems.map((item) => (
+                <li key={item.id} onClick={() => handleItemClick(item)}>
+                  {item.title}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       )}
