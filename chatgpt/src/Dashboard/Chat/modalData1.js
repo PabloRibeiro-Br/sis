@@ -1,49 +1,42 @@
 const modalItems = [
-    { 
-        id: 1, 
-        title: "Ano 2010", 
-        description: "Ano de fabricação 2010, "
-    },
-    { 
-        id: 2, 
-        title: "Injeção Eletrônica", 
-        description: "Principais procedimentos de diagnóstico e solução de problemas no sistema de injeção eletrônica de veículos automotivos."
-    },
-    { 
-        id: 3, 
-        title: "Sistema de Ignição", 
-        description: "Abordagem técnica para diagnosticar e corrigir falhas no sistema de ignição, incluindo testes de componentes-chave."
-    },
-    { 
-        id: 4, 
-        title: "Filtro de Combustível", 
-        description: "Indicações sobre a escolha e substituição adequada do filtro de combustível durante os procedimentos de manutenção."
-    },
-    { 
-        id: 5, 
-        title: "Sistema de Arrefecimento", 
-        description: "Princípios de funcionamento e procedimentos de manutenção do sistema de arrefecimento do motor."
-    },
-    { 
-        id: 6, 
-        title: "Transmissão Automática", 
-        description: "Diagnóstico e solução de problemas comuns em transmissões automáticas, incluindo verificações de fluido e ajustes."
-    },
-    { 
-        id: 7, 
-        title: "Sistema de Freios", 
-        description: "Técnicas de inspeção e reparo do sistema de freios, incluindo substituição de pastilhas, discos e sangramento do sistema."
-    },
-    { 
-        id: 8, 
-        title: "Suspensão", 
-        description: "Práticas recomendadas para diagnóstico e reparo de componentes do sistema de suspensão, como amortecedores e molas."
-    },
-    { 
-        id: 9, 
-        title: "Sistema Elétrico", 
-        description: "Procedimentos de diagnóstico elétrico, incluindo testes de bateria, alternador e sistema de partida."
-    }
+    { id: 1, title: "Ano 1985", description: "Ano 1985, "},
+    { id: 2, title: "Ano 1986", description: "Ano 1986, "},
+    { id: 3, title: "Ano 1987", description: "Ano 1987, "},
+    { id: 4, title: "Ano 1988", description: "Ano 1988, "},
+    { id: 5, title: "Ano 1989", description: "Ano 1989, "},
+    { id: 6, title: "Ano 1990", description: "Ano 1990, "},
+    { id: 7, title: "Ano 1991", description: "Ano 1991, "},
+    { id: 8, title: "Ano 1992", description: "Ano 1992, "},
+    { id: 9, title: "Ano 1993", description: "Ano 1993, "},
+    { id: 10, title: "Ano 1994", description: "Ano 1994, "},
+    { id: 11, title: "Ano 1995", description: "Ano 1995, "},
+    { id: 12, title: "Ano 1996", description: "Ano 1996, "},
+    { id: 13, title: "Ano 1997", description: "Ano 1997, "},
+    { id: 14, title: "Ano 1998", description: "Ano 1998, "},
+    { id: 15, title: "Ano 1999", description: "Ano 1999, "},
+    { id: 16, title: "Ano 2000", description: "Ano 2000, "},
+    { id: 17, title: "Ano 2001", description: "Ano 2001, "},
+    { id: 18, title: "Ano 2002", description: "Ano 2002, "},
+    { id: 19, title: "Ano 2003", description: "Ano 2003, "},
+    { id: 20, title: "Ano 2004", description: "Ano 2004, "},
+    { id: 21, title: "Ano 2005", description: "Ano 2005, "},
+    { id: 22, title: "Ano 2006", description: "Ano 2006, "},
+    { id: 23, title: "Ano 2007", description: "Ano 2007, "},
+    { id: 24, title: "Ano 2008", description: "Ano 2008, "},
+    { id: 25, title: "Ano 2009", description: "Ano 2009, "},
+    { id: 26, title: "Ano 2010", description: "Ano 2010, "},
+    { id: 27, title: "Ano 2011", description: "Ano 2011, "},
+    { id: 28, title: "Ano 2012", description: "Ano 2012, "},
+    { id: 29, title: "Ano 2013", description: "Ano 2013, "},
+    { id: 30, title: "Ano 2014", description: "Ano 2014, "},
+    { id: 31, title: "Ano 2015", description: "Ano 2015, "},
+    { id: 32, title: "Ano 2016", description: "Ano 2016, "},
+    { id: 33, title: "Ano 2017", description: "Ano 2017, "},
+    { id: 34, title: "Ano 2018", description: "Ano 2018, "},
+    { id: 35, title: "Ano 2019", description: "Ano 2019, "},
+    { id: 36, title: "Ano 2020", description: "Ano 2020, "},
+    { id: 37, title: "Ano 2021", description: "Ano 2021, "},
+    { id: 38, title: "Ano 2022", description: "Ano 2022, "}
 ];
 
 export default modalItems;
