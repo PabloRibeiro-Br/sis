@@ -98,7 +98,7 @@
 }
 
 .new_message_input {
-    width: 100%;
+    width: 90%;
     border: 1px solid rgb(217,217,227);
     border-radius: 8px;
     height: 50px;
@@ -108,8 +108,7 @@
     padding: 0 10px;
     position: relative;
     transition: 0.4s;
-    margin-left: 10px;
-    margin-right: 10px;
+   
 }
 
 .new_message_input:focus {
