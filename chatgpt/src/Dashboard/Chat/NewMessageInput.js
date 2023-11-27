@@ -110,14 +110,12 @@ const NewMessageInput = () => {
        <button className="send-button" onClick={handleSendMessage}>
          <BsSend />
        </button>
-       <button className="open-modal-button" onClick={openModal}>
-         Abrir Modal
-       </button>
+     
        {/* Adicionando três botões extras */}
        {extraButtons.map((button) => (
-         <button
+         <button 
            key={button.id}
-           className="extra-button"
+           className="open-modal-button"
            onClick={() => openExtraModal(button.modalData)}
          >
            {button.label}
