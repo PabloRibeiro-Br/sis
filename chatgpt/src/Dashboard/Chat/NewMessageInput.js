@@ -4,12 +4,12 @@ import { BsSend } from "react-icons/bs";
 import { v4 as uuid } from "uuid";
 import { addMessage, setSelectedConversationId } from "../dashboardSlice";
 import { sendConversationMessage } from "../../socketConnection/socketConn";
+import modalItems from "./modalData"; // Importa o arquivo JavaScript
 import "./NewMessageInput.css";
 
 const NewMessageInput = () => {
   const [content, setContent] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [modalItems, setModalItems] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -77,14 +77,6 @@ const NewMessageInput = () => {
       proceedMessage(combinedContent);
     }
   };
-
-  useEffect(() => {
-    // Carregar dados do arquivo JSON
-    fetch("./modalData.json")
-      .then((response) => response.json())
-      .then((data) => setModalItems(data))
-      .catch((error) => console.error("Erro ao carregar dados do arquivo JSON:", error));
-  }, []);  // Executa apenas uma vez, sem dependências
 
   return (
     <div className="new-message-input-container">
