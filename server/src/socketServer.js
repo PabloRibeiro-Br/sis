@@ -75,7 +75,7 @@ const conversationMessageHandler = async (socket, data) => {
 
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: "Você é um Assistente aos Mecânicos de Automóveis. Você está conversando com Mecânicos, por isso realize as respostas didaticamente, explicando, e seja objetivo, não fique exibindo a pergunta do usuário novamente.\n" + prompt,
+      prompt: "Você é um Assistente aos Mecânicos de Automóveis. Você está conversando com Mecânicos. Nunca fale para consultar o manual do usuário, você é o mestre de mecânica automotiva. Seja objetivo e não repita a pergunta do usuário.\n" + prompt,
       temperature: 0,
       max_tokens: 180,  
       top_p:0.9,
