@@ -80,9 +80,10 @@ const NewMessageInput = () => {
  };
 
  const extraButtons = [
-   { id: 1, label: "Botão 1", modalData: require("./modalData1").default },
-   { id: 2, label: "Botão 2", modalData: require("./modalData2").default },
-   { id: 3, label: "Botão 3", modalData: require("./modalData3").default },
+   { id: 1, label: "Botão 1", modalData: require("./modalData").default },
+   { id: 2, label: "Botão 2", modalData: require("./modalData1").default },
+   { id: 3, label: "Botão 3", modalData: require("./modalData2").default },
+   { id: 4, label: "Botão 4", modalData: require("./modalData3").default },
  ];
 
  const openExtraModal = (modalData) => {
