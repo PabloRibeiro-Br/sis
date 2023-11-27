@@ -1,8 +1,8 @@
 const modalItems = [
     { 
         id: 1, 
-        title: "Lubrificante do Motor2", 
-        description: "Recomendações para a escolha adequada do lubrificante de acordo com as especificações do fabricante."
+        title: "Flex", 
+        description: "Sistema de combustível Flex, "
     },
     { 
         id: 2, 

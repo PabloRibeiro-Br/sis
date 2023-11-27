@@ -1,8 +1,8 @@
 const modalItems = [
     { 
         id: 1, 
-        title: "Lubrificante do Motor3", 
-        description: "Recomendações para a escolha adequada do lubrificante de acordo com as especificações do fabricante."
+        title: "Lubrificante do Motor", 
+        description: "Qual o óleo do motor recomendado pela fabricante?"
     },
     { 
         id: 2, 

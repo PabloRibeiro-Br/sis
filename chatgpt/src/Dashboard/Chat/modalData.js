@@ -1,8 +1,8 @@
 const modalItems = [
     { 
         id: 1, 
-        title: "Lubrificante do Motor", 
-        description: "Recomendações para a escolha adequada do lubrificante de acordo com as especificações do fabricante."
+        title: "Agile 1.4", 
+        description: "Chevrolet Agile 1.4, "
     },
     { 
         id: 2, 
