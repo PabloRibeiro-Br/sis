@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BsSend } from "react-icons/bs";
 import { v4 as uuid } from "uuid";
@@ -79,15 +79,16 @@ const NewMessageInput = () => {
   };
 
   const extraButtons = [
-    { id: 1, label: "Botão 1", modalData: require("./modalData1").default },
-    { id: 2, label: "Botão 2", modalData: require("./modalData2").default },
-    { id: 3, label: "Botão 3", modalData: require("./modalData3").default },
+    { id: 1, label: "Botão 1" },
+    { id: 2, label: "Botão 2" },
+    { id: 3, label: "Botão 3" },
   ];
 
-  const openExtraModal = (modalData) => {
+  const openExtraModal = (button) => {
     setShowModal(true);
+    const modalData = require(`./modalData${button.id}`).default;
     // Adicione lógica para lidar com os dados do modal
-    console.log("Modal Data:", modalData);
+    console.log(`Modal Data for ${button.label}:`, modalData);
   };
 
   return (
@@ -117,7 +118,7 @@ const NewMessageInput = () => {
           <button
             key={button.id}
             className="extra-button"
-            onClick={() => openExtraModal(button.modalData)}
+            onClick={() => openExtraModal(button)}
           >
             {button.label}
           </button>
