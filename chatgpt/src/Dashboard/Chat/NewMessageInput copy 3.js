@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BsSend } from "react-icons/bs";
 import { v4 as uuid } from "uuid";
 import { addMessage, setSelectedConversationId } from "../dashboardSlice";
 import { sendConversationMessage } from "../../socketConnection/socketConn";
-import modalItems from "./modalData"; // Importa o arquivo JavaScript
 import "./NewMessageInput.css";
 
 const NewMessageInput = () => {
@@ -110,8 +109,7 @@ const NewMessageInput = () => {
        <button className="send-button" onClick={handleSendMessage}>
          <BsSend />
        </button>
-     
-       {/* Adicionando três botões extras */}
+ 
        {extraButtons.map((button) => (
          <button 
            key={button.id}
