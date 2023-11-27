@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+// Importações necessárias
+
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BsSend } from "react-icons/bs";
 import { v4 as uuid } from "uuid";
 import { addMessage, setSelectedConversationId } from "../dashboardSlice";
 import { sendConversationMessage } from "../../socketConnection/socketConn";
-import "./NewMessageInput.css";
+import "./NewMessageInput.css"; // Importe o arquivo de estilos
 
 const NewMessageInput = () => {
   const [content, setContent] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [modalItems, setModalItems] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -78,13 +79,11 @@ const NewMessageInput = () => {
     }
   };
 
-  useEffect(() => {
-    // Carregar dados do arquivo JSON
-    fetch("./modalData.json")
-      .then((response) => response.json())
-      .then((data) => setModalItems(data))
-      .catch((error) => console.error("Erro ao carregar dados do arquivo JSON:", error));
-  }, []);  // Executa apenas uma vez, sem dependências
+  const modalItems = [
+    { id: 1, title: "Lubrificante do Motor", description: "Qual lubrificante recomendado para o motor deste veículo." },
+    { id: 2, title: "Item 2", description: "Descrição do Item 2" },
+    { id: 3, title: "Item 3", description: "Descrição do Item 3" },
+  ];
 
   return (
     <div className="new-message-input-container">
