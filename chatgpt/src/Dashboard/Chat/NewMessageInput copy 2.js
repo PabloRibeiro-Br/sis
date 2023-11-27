@@ -78,18 +78,6 @@ const NewMessageInput = () => {
     }
   };
 
-  const extraButtons = [
-    { id: 1, label: "Botão 1", modalData: require("./modalData1").default },
-    { id: 2, label: "Botão 2", modalData: require("./modalData2").default },
-    { id: 3, label: "Botão 3", modalData: require("./modalData3").default },
-  ];
-
-  const openExtraModal = (modalData) => {
-    setShowModal(true);
-    // Adicione lógica para lidar com os dados do modal
-    console.log("Modal Data:", modalData);
-  };
-
   return (
     <div className="new-message-input-container">
       <input
@@ -112,16 +100,6 @@ const NewMessageInput = () => {
         <button className="open-modal-button" onClick={openModal}>
           Abrir Modal
         </button>
-        {/* Adicionando três botões extras */}
-        {extraButtons.map((button) => (
-          <button
-            key={button.id}
-            className="extra-button"
-            onClick={() => openExtraModal(button.modalData)}
-          >
-            {button.label}
-          </button>
-        ))}
       </div>
       {showModal && (
         <div className="modal">
