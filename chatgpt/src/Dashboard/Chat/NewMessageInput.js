@@ -76,7 +76,7 @@ const NewMessageInput = () => {
     const combinedContent = `${content} ${item.description}`.trim();
     setContent(combinedContent);
 
-    if (selectedButton === 4) {
+    if (selectedButton === 5) {
       proceedMessage(combinedContent);
     }
   }
@@ -90,7 +90,8 @@ const NewMessageInput = () => {
   { id: 1, label: "Botão 1", modalData: require("./modalData").default },
   { id: 2, label: "Botão 2", modalData: require("./modalData1").default },
   { id: 3, label: "Botão 3", modalData: require("./modalData2").default },
-  { id: 4, label: "Botão 4", modalData: require("./modalData3").default },
+  { id: 4, label: "Botão 4", modalData: require("./modalData1").default },
+  { id: 5, label: "Botão 5", modalData: require("./modalData3").default },
  ];
 
  const openExtraModal = (modalData) => {
@@ -100,6 +101,9 @@ const NewMessageInput = () => {
 
  return (
   <div className="new-message-input-container">
+      <button className="send-button" onClick={handleSendMessage}>
+        <BsSend />
+      </button>
     <input
       className="new_message_input"
       placeholder="Enviar mensagem..."
@@ -111,13 +115,11 @@ const NewMessageInput = () => {
         !selectedConversation.messages[
           selectedConversation.messages.length - 1
         ].aiMessage
-      }
+      } 
     />
+
     <div className="button-container">
-      <button className="send-button" onClick={handleSendMessage}>
-        <BsSend />
-      </button>
- 
+    
       {extraButtons.map((button) => (
         <button 
           key={button.id}
