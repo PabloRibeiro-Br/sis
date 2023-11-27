@@ -10,7 +10,7 @@ const NewMessageInput = () => {
  const [content, setContent] = useState("");
  const [showModal, setShowModal] = useState(false);
  const [modalData, setModalData] = useState(null);
- const [lastButtonClicked, setLastButtonClicked] = useState(null);
+ const [selectedButton, setSelectedButton] = useState(null);
 
  const dispatch = useDispatch();
 
@@ -50,13 +50,13 @@ const NewMessageInput = () => {
  };
 
  const handleSendMessage = () => {
-  if (content.length > 0 && lastButtonClicked === 4) {
+  if (content.length > 0) {
     proceedMessage(content);
   }
  };
 
  const handleKeyPressed = (event) => {
-  if (event.code === "Enter" && content.length > 0 && lastButtonClicked === 4) {
+  if (event.code === "Enter" && content.length > 0) {
     proceedMessage(content);
   }
  };
@@ -75,7 +75,15 @@ const NewMessageInput = () => {
   if (item && item.description) {
     const combinedContent = `${content} ${item.description}`.trim();
     setContent(combinedContent);
+
+    if (selectedButton === 4) {
+      proceedMessage(combinedContent);
+    }
   }
+ };
+
+ const handleButtonClick = (buttonId) => {
+  setSelectedButton(buttonId);
  };
 
  const extraButtons = [
@@ -85,10 +93,9 @@ const NewMessageInput = () => {
   { id: 4, label: "Botão 4", modalData: require("./modalData3").default },
  ];
 
- const openExtraModal = (modalData, buttonId) => {
+ const openExtraModal = (modalData) => {
   setShowModal(true);
   setModalData(modalData);
-  setLastButtonClicked(buttonId);
  };
 
  return (
@@ -115,7 +122,10 @@ const NewMessageInput = () => {
         <button 
           key={button.id}
           className="open-modal-button"
-          onClick={() => openExtraModal(button.modalData, button.id)}
+          onClick={() => {
+            openExtraModal(button.modalData);
+            handleButtonClick(button.id);
+          }}
         >
           {button.label}
         </button>
