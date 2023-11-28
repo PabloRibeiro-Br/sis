@@ -37,7 +37,7 @@ const modalItems = [
     { id: 36, title: "Ano 2020", description: "Ano 2020, "},
     { id: 37, title: "Ano 2021", description: "Ano 2021, "},
     { id: 38, title: "Ano 2022", description: "Ano 2022, "}
-];
+].reverse();
 
 export default modalItems;
 
