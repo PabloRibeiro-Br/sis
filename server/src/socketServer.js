@@ -92,39 +92,32 @@ const conversationMessageHandler = async (socket, data) => {
     const aiMessageContent = response?.data?.choices[0]?.text;
 
     if (aiMessageContent) {
-      // Divida a resposta em linhas
-      const aiMessageLines = aiMessageContent.split("\n");
+      // Formata a resposta da IA de maneira organizada
+      const formattedAIMessage = {
+        content: aiMessageContent,
+        id: uuid(),
+        aiMessage: true,
+      };
 
-      // Envia cada linha ao cliente individualmente
-      for (const line of aiMessageLines) {
-        const aiMessage = {
-          content: line,
-          id: uuid(),
-          aiMessage: true,
-        };
+      const conversation = sessions[sessionId].find(
+        (c) => c.id === conversationId
+      );
 
-        const conversation = sessions[sessionId].find(
-          (c) => c.id === conversationId
-        );
-
-        if (!conversation) {
-          sessions[sessionId].push({
-            id: conversationId,
-            messages: [message, aiMessage],
-          });
-        }
-
-        if (conversation) {
-          conversation.messages.push(message, aiMessage);
-        }
-
-        const updatedConversation = sessions[sessionId].find(
-          (c) => c.id === conversationId
-        );
-
-        // Envia a conversa atualizada ao cliente
-        socket.emit("conversation-details", updatedConversation);
+      if (!conversation) {
+        sessions[sessionId].push({
+          id: conversationId,
+          messages: [formattedAIMessage],
+        });
+      } else {
+        conversation.messages.push(formattedAIMessage);
       }
+
+      const updatedConversation = sessions[sessionId].find(
+        (c) => c.id === conversationId
+      );
+
+      // Envia a conversa atualizada ao cliente
+      socket.emit("conversation-details", updatedConversation);
     } else {
       const aiErrorMessage = {
         content:
@@ -140,12 +133,10 @@ const conversationMessageHandler = async (socket, data) => {
       if (!conversation) {
         sessions[sessionId].push({
           id: conversationId,
-          messages: [message, aiErrorMessage],
+          messages: [aiErrorMessage],
         });
-      }
-
-      if (conversation) {
-        conversation.messages.push(message, aiErrorMessage);
+      } else {
+        conversation.messages.push(aiErrorMessage);
       }
 
       const updatedConversation = sessions[sessionId].find(
@@ -157,6 +148,7 @@ const conversationMessageHandler = async (socket, data) => {
     }
   }
 };
+
 
 
 module.exports = { registerSocketServer };
