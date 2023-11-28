@@ -1,11 +1,9 @@
-/* NewMessageInput.css */
-
 .new-message-input-container {
   display: flex;
   flex-direction: column;
   position: center;
   width: 100%;
-  height: 100px;
+  height: 140px;
 }
 
 .new_message_input {
@@ -25,7 +23,7 @@
 }
 
 .send-button:hover, .open-modal-button:hover {
-  background-color: #3e8e41; /* alterar para a cor desejada */
+  background-color: #3e8e41; 
 }
 
 .send-button:active {
