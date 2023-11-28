@@ -11,7 +11,21 @@
   margin-right: 5px;
  }
 
+ .search-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+}
 
+/* Estilo para a lista no modal */
+.modal-content ul {
+  list-style-type: none;
+  padding: 0;
+}
 
 .send-button, .open-modal-button {
   transition: background-color 0.3s ease;
@@ -73,30 +87,49 @@
 }
 
 
+/* Estilo para o modal */
 .modal {
   display: flex;
   justify-content: center;
   align-items: center;
   position: fixed;
-  z-index: 1;
-  left: 0;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
 }
 
+/* Estilo para o conteúdo do modal */
 .modal-content {
-  background-color: #fefefe;
-  margin: auto;
+  background-color: #fff;
   padding: 20px;
-  border: 1px solid #888;
-  width: 60%;
-  max-height: 500px;
-  overflow: auto;
-  border-radius: 5px;
- }
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para o botão de fechar o modal */
+.modal-content .close {
+  font-size: 24px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: #555;
+}
+
+/* Estilo para o botão de fechar o modal no hover */
+.modal-content .close:hover {
+  color: #333;
+}
+
+/* Estilo para o título do modal (opcional) */
+.modal-content h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
 
 .close {
   color: #aaa;
@@ -137,3 +170,30 @@ ul li:hover {
   border-radius: 4px;
   padding: 5px;
  }
+
+ /* Estilo para cada item da lista */
+.modal-content li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Estilo para o hover do item da lista */
+.modal-content li:hover {
+  background-color: #f2f2f2;
+}
+
+.modal-content .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #aaa;
+}
+
+/* Estilo para o botão de fechar o modal no hover */
+.modal-content .close:hover {
+  color: #555;
+}
