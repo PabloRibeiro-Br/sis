@@ -71,50 +71,92 @@ const conversationMessageHandler = async (socket, data) => {
       }));
     }
 
-    const prompt = conversationHistory.map(m => m.content).join('\n') + "\n" + message.content;
+    const prompt =
+      conversationHistory.map((m) => m.content).join("\n") +
+      "\n" +
+      message.content;
 
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: "Você é um Assistente aos Mecânicos de Automóveis. Você está conversando com Mecânicos. Nunca fale para consultar o manual do usuário, você é o mestre de mecânica automotiva. Seja objetivo e não repita a pergunta do usuário.\n" + prompt,
+      prompt:
+        "Você é um Assistente aos Mecânicos de Automóveis. Você está conversando com Mecânicos. Nunca fale para consultar o manual do usuário, você é o mestre de mecânica automotiva. Seja objetivo e não repita a pergunta do usuário.\n" +
+        prompt,
       temperature: 0,
-      max_tokens: 180,  
-      top_p:0.9,
-      presence_penalty:0.9,
-      frequency_penalty:0.9,
-      n:2, 
+      max_tokens: 180,
+      top_p: 0.9,
+      presence_penalty: 0.9,
+      frequency_penalty: 0.9,
+      n: 2,
     });
 
     const aiMessageContent = response?.data?.choices[0]?.text;
 
-    const aiMessage = {
-      content: aiMessageContent
-        ? aiMessageContent
-        : "Erro da Inteligência Artificial, sem comunicação: REDE-NEURAL-P8493",
-      id: uuid(),
-      aiMessage: true,
-    };
+    if (aiMessageContent) {
+      // Divida a resposta em linhas
+      const aiMessageLines = aiMessageContent.split("\n");
 
-    const conversation = sessions[sessionId].find(
-      (c) => c.id === conversationId
-    );
+      // Envia cada linha ao cliente individualmente
+      for (const line of aiMessageLines) {
+        const aiMessage = {
+          content: line,
+          id: uuid(),
+          aiMessage: true,
+        };
 
-    if (!conversation) {
-      sessions[sessionId].push({
-        id: conversationId,
-        messages: [message, aiMessage],
-      });
+        const conversation = sessions[sessionId].find(
+          (c) => c.id === conversationId
+        );
+
+        if (!conversation) {
+          sessions[sessionId].push({
+            id: conversationId,
+            messages: [message, aiMessage],
+          });
+        }
+
+        if (conversation) {
+          conversation.messages.push(message, aiMessage);
+        }
+
+        const updatedConversation = sessions[sessionId].find(
+          (c) => c.id === conversationId
+        );
+
+        // Envia a conversa atualizada ao cliente
+        socket.emit("conversation-details", updatedConversation);
+      }
+    } else {
+      const aiErrorMessage = {
+        content:
+          "Erro da Inteligência Artificial, sem comunicação: REDE-NEURAL-P8493",
+        id: uuid(),
+        aiMessage: true,
+      };
+
+      const conversation = sessions[sessionId].find(
+        (c) => c.id === conversationId
+      );
+
+      if (!conversation) {
+        sessions[sessionId].push({
+          id: conversationId,
+          messages: [message, aiErrorMessage],
+        });
+      }
+
+      if (conversation) {
+        conversation.messages.push(message, aiErrorMessage);
+      }
+
+      const updatedConversation = sessions[sessionId].find(
+        (c) => c.id === conversationId
+      );
+
+      // Envia a conversa atualizada ao cliente
+      socket.emit("conversation-details", updatedConversation);
     }
-
-    if (conversation) {
-      conversation.messages.push(message, aiMessage);
-    }
-
-    const updatedConversation = sessions[sessionId].find(
-      (c) => c.id === conversationId
-    );
-
-    socket.emit("conversation-details", updatedConversation);
   }
 };
+
 
 module.exports = { registerSocketServer };
