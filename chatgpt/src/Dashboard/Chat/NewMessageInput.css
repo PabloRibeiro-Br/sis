@@ -23,7 +23,7 @@
 }
 
 .send-button:hover, .open-modal-button:hover {
-  background-color: #3e8e41; 
+  background-color: #6F0500; 
 }
 
 .send-button:active {
@@ -33,7 +33,7 @@
 .open-modal-button {
   background-color: #BF0B00;
   color: white;
-  padding: 20px;
+  padding-inline: 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
