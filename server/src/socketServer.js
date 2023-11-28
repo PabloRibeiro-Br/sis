@@ -106,10 +106,10 @@ const conversationMessageHandler = async (socket, data) => {
       if (!conversation) {
         sessions[sessionId].push({
           id: conversationId,
-          messages: [formattedAIMessage],
+          messages: [message, formattedAIMessage],
         });
       } else {
-        conversation.messages.push(formattedAIMessage);
+        conversation.messages.push(message, formattedAIMessage);
       }
 
       const updatedConversation = sessions[sessionId].find(
@@ -133,10 +133,10 @@ const conversationMessageHandler = async (socket, data) => {
       if (!conversation) {
         sessions[sessionId].push({
           id: conversationId,
-          messages: [aiErrorMessage],
+          messages: [message, aiErrorMessage],
         });
       } else {
-        conversation.messages.push(aiErrorMessage);
+        conversation.messages.push(message, aiErrorMessage);
       }
 
       const updatedConversation = sessions[sessionId].find(
@@ -148,6 +148,7 @@ const conversationMessageHandler = async (socket, data) => {
     }
   }
 };
+
 
 
 
