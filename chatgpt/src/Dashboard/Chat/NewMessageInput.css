@@ -11,12 +11,7 @@
   margin-right: 5px;
  }
 
-.button-container {
-  width: 80%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+
 
 .send-button, .open-modal-button {
   transition: background-color 0.3s ease;
@@ -30,17 +25,53 @@
   background: #eee;
  }
  
+ .button-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f4f4; /* Cor de fundo suave */
+  padding: 15px;
+  border-radius: 10px;
+}
+
 .open-modal-button {
-  background-color: #BF0B00;
+  background-color: #4CAF50; /* Cor de fundo verde */
   color: white;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  cursor: crosshair;
-  margin-top: 10px;
-  height: 50px;
+  cursor: pointer;
+  margin: 0 10px;
+  transition: background-color 0.3s ease; /* Efeito de transição suave */
+
+  /* Adicionando sombra sutil */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.open-modal-button:hover {
+  background-color: #45a049; /* Cor de fundo verde mais escura ao passar o mouse */
+}
+
+/* Adicionando estilo para um possível segundo botão */
+.second-button {
+  background-color: #337ab7; /* Cor de fundo azul */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 10px;
+  transition: background-color 0.3s ease; /* Efeito de transição suave */
+
+  /* Adicionando sombra sutil */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.second-button:hover {
+  background-color: #286090; /* Cor de fundo azul mais escura ao passar o mouse */
+}
+
 
 .modal {
   display: flex;
