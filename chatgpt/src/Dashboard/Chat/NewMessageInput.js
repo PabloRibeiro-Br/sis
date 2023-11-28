@@ -76,7 +76,7 @@ const NewMessageInput = () => {
    const combinedContent = `${content} ${item.description}`.trim();
    setContent(combinedContent);
 
-   if (selectedButton === 5) {
+   if (selectedButton === 6) {
      proceedMessage(combinedContent);
    }
  }
@@ -88,10 +88,11 @@ const NewMessageInput = () => {
 
  const extraButtons = [
  { id: 1, label: "Botão 1", modalData: require("./modalData").default },
- { id: 2, label: "Botão 2", modalData: require("./modalData1").default },
- { id: 3, label: "Botão 3", modalData: require("./modalData2").default },
- { id: 4, label: "Botão 4", modalData: require("./modalData1").default },
- { id: 5, label: "Botão 5", modalData: require("./modalData3").default },
+ { id: 2, label: "Botão 2", modalData: require("./modalDataMotor").default },
+ { id: 3, label: "Botão 3", modalData: require("./modalData1").default },
+ { id: 4, label: "Botão 4", modalData: require("./modalData2").default },
+ { id: 5, label: "Botão 5", modalData: require("./modalData1").default },
+ { id: 6, label: "Botão 6", modalData: require("./modalData3").default },
  ];
 
  const openExtraModal = (modalData) => {
