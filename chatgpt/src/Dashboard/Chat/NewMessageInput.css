@@ -12,9 +12,9 @@
  }
 
 .button-container {
-  width: 70%;
+  width: 80%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -33,12 +33,13 @@
 .open-modal-button {
   background-color: #BF0B00;
   color: white;
-  padding-inline: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
+  cursor: crosshair;
   margin-top: 10px;
-  height: 40px;
+  height: 50px;
 }
 
 .modal {
