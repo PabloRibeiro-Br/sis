@@ -27,7 +27,7 @@
 
 .new_message_input_container {
     width: 100%;
-    height: 100px;
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
