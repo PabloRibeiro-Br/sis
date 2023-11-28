@@ -97,9 +97,9 @@ const NewMessageInput = () => {
     setSelectedButton(buttonId);
   };
 
-  const handleAdditionalButtonClick = (button) => {
-    const combinedContent = `${content} ${button.description}`.trim();
-    setContent(combinedContent);
+  const filterAndIgnoreAccents = (text) => {
+    // Adicione a lógica para filtrar e ignorar acentos aqui, se necessário
+    return text;
   };
 
   return (
@@ -127,7 +127,7 @@ const NewMessageInput = () => {
           <button
             key={button.id}
             className="additional-button"
-            onClick={() => handleAdditionalButtonClick(button)}
+            onClick={() => handleItemClick(button)}
           >
             {button.label}
           </button>
