@@ -11,7 +11,11 @@ const NewMessageInput = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [selectedButton, setSelectedButton] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(""); // Adicionado
+  const [searchTerm, setSearchTerm] = useState("");
+  const [additionalButtons, setAdditionalButtons] = useState([
+    { id: 7, label: "Roda Fônica", description: "Como faz para testar a roda fônica..." },
+    // Adicione mais botões conforme necessário
+  ]);
 
   const dispatch = useDispatch();
 
@@ -93,33 +97,9 @@ const NewMessageInput = () => {
     setSelectedButton(buttonId);
   };
 
-  const extraButtons = [
-    { id: 1, label: "Veículo", modalData: require("./modalData").default },
-    { id: 2, label: "Motor", modalData: require("./modalDataMotor").default },
-    { id: 3, label: "Ano", modalData: require("./modalData1").default },
-    { id: 4, label: "Combustível", modalData: require("./modalData2").default },
-    { id: 5, label: "Sistema", modalData: require("./modalData1").default },
-    { id: 6, label: "Processo", modalData: require("./modalData3").default },
-  ];
-
-  const openExtraModal = (modalData) => {
-    setShowModal(true);
-    setModalData(modalData);
-  };
-
-  // Função para filtrar palavras e ignorar acentos
-  const filterAndIgnoreAccents = (text) => {
-    const normalizedText = text
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, ""); // Remove acentos
-
-    const normalizedSearchTerm = searchTerm
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, ""); // Remove acentos
-
-    return normalizedText.includes(normalizedSearchTerm);
+  const handleAdditionalButtonClick = (button) => {
+    const combinedContent = `${content} ${button.description}`.trim();
+    setContent(combinedContent);
   };
 
   return (
@@ -155,6 +135,16 @@ const NewMessageInput = () => {
             {button.label}
           </button>
         ))}
+
+        {additionalButtons.map((button) => (
+          <button
+            key={button.id}
+            className="additional-button"
+            onClick={() => handleAdditionalButtonClick(button)}
+          >
+            {button.label}
+          </button>
+        ))}
       </div>
       {showModal && (
         <div className="modal" onClick={handleBackgroundClick}>
@@ -162,8 +152,6 @@ const NewMessageInput = () => {
             <span className="close" onClick={closeModal}>
               &times;
             </span>
-
-            {/* Adicionando campo de pesquisa */}
             <input
               type="text"
               className="search-input"
@@ -171,7 +159,6 @@ const NewMessageInput = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-
             <ul>
               {modalData &&
                 modalData
