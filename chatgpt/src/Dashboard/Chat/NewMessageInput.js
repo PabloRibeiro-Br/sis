@@ -123,19 +123,6 @@ const NewMessageInput = () => {
         </button>
       </div>
       <div className="button-container">
-        {extraButtons.map((button) => (
-          <button
-            key={button.id}
-            className="open-modal-button"
-            onClick={() => {
-              openExtraModal(button.modalData);
-              handleButtonClick(button.id);
-            }}
-          >
-            {button.label}
-          </button>
-        ))}
-
         {additionalButtons.map((button) => (
           <button
             key={button.id}
