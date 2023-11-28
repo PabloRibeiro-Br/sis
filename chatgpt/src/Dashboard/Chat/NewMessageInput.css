@@ -36,7 +36,7 @@
 }
 
 .open-modal-button {
-  background-color: #4CAF50; /* Cor de fundo verde */
+  background-color: #BF0B00; /* Cor de fundo verde */
   color: white;
   padding: 10px 20px;
   border: none;
@@ -50,7 +50,7 @@
 }
 
 .open-modal-button:hover {
-  background-color: #45a049; /* Cor de fundo verde mais escura ao passar o mouse */
+  background-color: #6F0500; /* Cor de fundo verde mais escura ao passar o mouse */
 }
 
 /* Adicionando estilo para um possível segundo botão */
