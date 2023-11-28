@@ -24,6 +24,11 @@ const NewMessageInput = () => {
  (c) => c.id === selectedConversationId
  );
 
+ const handleBackgroundClick = (event) => {
+  if (event.target.classList.contains("modal")) {
+    closeModal();
+  }
+};
  const proceedMessage = (text) => {
  const message = {
    aiMessage: false,
@@ -135,7 +140,7 @@ const NewMessageInput = () => {
      ))}
    </div>
    {showModal && (
-     <div className="modal">
+     <div className="modal" onClick={handleBackgroundClick}>
        <div className="modal-content">
          <span className="close" onClick={closeModal}>
            &times;
