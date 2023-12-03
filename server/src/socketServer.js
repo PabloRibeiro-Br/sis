@@ -77,7 +77,7 @@ const conversationMessageHandler = async (socket, data) => {
      messages: [
       {
         role: 'system',
-        content: "Você é um profissional, com mais de 25 anos de especialização em Injeção Eletrônica de Automóveis da Chevrolet."
+        content: "Você é um profissional, com mais de 25 anos de especialização em Injeção Eletrônica de Automóveis da Chevrolet." + "Mecânica de Automóveis, Engenharia Automotiva, Diagnóstico Automotivo."
       },
       {
         role: 'user',
