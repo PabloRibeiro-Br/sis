@@ -75,10 +75,21 @@ const conversationMessageHandler = async (socket, data) => {
    const response = await openai.createChatCompletion({
      model: "gpt-3.5-turbo",
      messages: [
-       ...previousConversationMessages,
-       { role: "user", content: message.content },
-     ],
-     prompt: "Eu sou um assistente especializado em injeção eletrônica e motores. Como posso ajudá-lo hoje?",
+      {
+        role: 'system',
+        content: "Você é um profissional, com mais de 25 anos de especialização em Injeção Eletrônica de Automóveis da Chevrolet."
+      },
+      {
+        role: 'user',
+        content: prompt
+      }
+    ],
+     max_tokens: 220,
+     temperature: 0.4,
+     top_p: 0.6,
+     frequency_penalty: 1.4,
+     presence_penalty: 0.2,
+     /* stop: ["\n"] -----  PARA, NÃO DEIXA A API FICAR CRIANDO TEXTOS LOGOS*/
    });
 
    const aiMessageContent = response?.data?.choices[0]?.message?.content;
