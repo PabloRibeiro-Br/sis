@@ -9,7 +9,7 @@ import { NewChatButton } from "../NewChatButton"
 
 const NewMessageInput = () => {
   const [content, setContent] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(true);
   const [modalData, setModalData] = useState(null);
   const [selectedButton, setSelectedButton] = useState(null);
   const [searchTerm, setSearchTerm] = useState(""); // Adicionado
@@ -143,7 +143,7 @@ const NewMessageInput = () => {
           <BsSend />
         </button>
       </div>
-      <NewChatButton />
+      
       <div className="button-container">
         {extraButtons.map((button) => (
           <button
