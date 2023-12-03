@@ -5,11 +5,10 @@ import { v4 as uuid } from "uuid";
 import { addMessage, setSelectedConversationId } from "../dashboardSlice";
 import { sendConversationMessage } from "../../socketConnection/socketConn";
 import "./NewMessageInput.css";
-import { NewChatButton } from "../NewChatButton"
 
 const NewMessageInput = () => {
   const [content, setContent] = useState("");
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [selectedButton, setSelectedButton] = useState(null);
   const [searchTerm, setSearchTerm] = useState(""); // Adicionado

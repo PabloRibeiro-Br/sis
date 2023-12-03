@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import {NewChatButton} from "../NewChatButton";
 
 import Messages from "./Messages";
 import NewMessageInput from "./NewMessageInput";
@@ -8,6 +9,8 @@ const ChatLogo = () => {
   return (
     <div className="chat_gpt_logo_container">
       <p className="chat_gpt_logo">aiRepair</p>
+      <NewChatButton handleSetSelectedChat={handleSetSelectedChat} />
+
     </div>
   );
 };
