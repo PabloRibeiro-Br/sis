@@ -103,7 +103,7 @@ const NewMessageInput = () => {
   ];
 
   const openExtraModal = (modalData) => {
-    setShowModal(true);
+    setShowModal(false);
     setModalData(modalData);
   };
 
