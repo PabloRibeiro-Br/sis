@@ -83,13 +83,13 @@ const conversationMessageHandler = async (socket, data) => {
         },
         {
           role: 'user',
-          content: message.content
+          content: message.content + prompt,
         }
       ],
-        max_tokens: 320,
-        temperature: 0.6,
-        top_p: 0.6,
-        frequency_penalty: 1.4,
+        max_tokens: 120,
+        temperature: 0.2,
+        top_p: 0.7,
+        frequency_penalty: 1.5,
         presence_penalty: 0.2,
         stop: ["\n"]
     });
