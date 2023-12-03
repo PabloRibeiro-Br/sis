@@ -82,7 +82,7 @@ const conversationMessageHandler = async (socket, data) => {
         messages: [
           {
             role: 'system',
-            content: "Você é um profissional, com mais de 25 anos de especialização em Injeção Eletrônica de Automóveis da Chevrolet."
+            content: "Você é especialista em: Mecânica de Automóveis, Injeção Eletrônica, Motores, Reparação e Manutenção, Testes de Componentes, Valores de Testes, Sabe o Lubrificante de todos os carros."
           },
           {
             role: 'user',
@@ -95,7 +95,7 @@ const conversationMessageHandler = async (socket, data) => {
         top_p: 0.7,
         frequency_penalty: 1.5,
         presence_penalty: 0.2,
-        /* stop: ["\n"] */
+        stop: ["\n"]
       });
 
       const aiMessageContent = response?.data?.choices[0]?.message?.content;
