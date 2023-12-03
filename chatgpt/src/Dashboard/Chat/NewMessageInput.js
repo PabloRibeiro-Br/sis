@@ -5,6 +5,7 @@ import { v4 as uuid } from "uuid";
 import { addMessage, setSelectedConversationId } from "../dashboardSlice";
 import { sendConversationMessage } from "../../socketConnection/socketConn";
 import "./NewMessageInput.css";
+import { NewChatButton } from "../NewChatButton"
 
 const NewMessageInput = () => {
   const [content, setContent] = useState("");
@@ -142,6 +143,7 @@ const NewMessageInput = () => {
           <BsSend />
         </button>
       </div>
+      <NewChatButton />
       <div className="button-container">
         {extraButtons.map((button) => (
           <button
