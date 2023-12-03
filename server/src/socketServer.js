@@ -77,10 +77,18 @@ const conversationMessageHandler = async (socket, data) => {
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
-        ...previousConversationMessages,
-        { role: "user", content: message.content },
+        {
+          role: 'system',
+          content: "Você é um profissional, com mais de 25 anos de especialização em Injeção Eletrônica de Automóveis da Chevrolet."
+        },
+        {
+          role: 'user',
+          content: message.content
+        }
       ],
     });
+
+   
 
     const aiMessageContent = response?.data?.choices[0]?.message?.content;
 
